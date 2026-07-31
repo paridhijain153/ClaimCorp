@@ -1,0 +1,189 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  EMPLOYEE
+}
+
+enum ExpenseStatus {
+  DRAFT
+  SUBMITTED
+  APPROVED
+  REJECTED
+  REIMBURSED
+}
+
+enum ReceiptProcessingStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model User {
+  id            String   @id @default(cuid())
+  name          String
+  email         String   @unique
+  password      String
+
+  role          Role
+
+  department    String?
+  designation   String?
+
+  isActive      Boolean  @default(true)
+
+  // Self Relation (Employee -> Manager)
+  managerId     String?
+
+  manager User? @relation(
+    "ManagerEmployees",
+    fields: [managerId],
+    references: [id]
+  )
+
+  employees User[] @relation("ManagerEmployees")
+
+  // Expenses Created
+  expenses Expense[] @relation("EmployeeExpenses")
+
+  // Expenses Approved
+  approvedExpenses Expense[] @relation("ApprovedExpenses")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id          String @id @default(cuid())
+
+  name        String @unique
+
+  description String?
+
+  isActive    Boolean @default(true)
+
+  expenses Expense[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Expense {
+
+  id String @id @default(cuid())
+
+  expenseNumber String @unique
+
+  // Employee
+
+  employeeId String
+
+  employee User @relation(
+    "EmployeeExpenses",
+    fields: [employeeId],
+    references: [id]
+  )
+
+  // Category
+
+  categoryId String
+
+  category Category @relation(
+    fields: [categoryId],
+    references: [id]
+  )
+
+  // Expense Details
+
+  title String
+
+  description String?
+
+  expenseDate DateTime
+
+  amount Decimal @db.Decimal(10,2)
+
+  tax Decimal @db.Decimal(10,2)
+
+  totalAmount Decimal @db.Decimal(10,2)
+
+  status ExpenseStatus @default(DRAFT)
+
+  // Approval
+
+  managerComment String?
+
+  approvedById String?
+
+  approvedBy User? @relation(
+    "ApprovedExpenses",
+    fields: [approvedById],
+    references: [id]
+  )
+
+  submittedAt DateTime?
+
+  approvedAt DateTime?
+
+  // Receipt
+
+  receipts Receipt[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model Receipt {
+
+  id String @id @default(cuid())
+
+  // Expense Relation
+
+  expenseId String
+
+  expense Expense @relation(
+    fields: [expenseId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  // File Details
+
+  fileName String
+
+  fileUrl String
+
+  mimeType String?
+
+  fileSize Int?
+
+  // OCR Processing
+
+  processingStatus ReceiptProcessingStatus @default(PENDING)
+
+  ocrText String?
+
+  // OCR Extracted Data
+
+  merchantName String?
+
+  invoiceNumber String?
+
+  invoiceDate DateTime?
+
+  detectedAmount Decimal? @db.Decimal(10,2)
+
+  detectedTax Decimal? @db.Decimal(10,2)
+
+  createdAt DateTime @default(now())
+}
