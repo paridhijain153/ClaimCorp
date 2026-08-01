@@ -29,4 +29,4 @@ const env = {
   CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
 };
 
-export default env;
+export default Object.freeze(env);
