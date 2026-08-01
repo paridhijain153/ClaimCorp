@@ -8,16 +8,16 @@ const validate = (schema) => {
       next();
     } catch (error) {
       if (error instanceof ZodError) {
-        return next(
-          new ApiError(
-            400,
-            "Validation failed",
-            error.issues.map((issue) => ({
-              field: issue.path.join("."),
-              message: issue.message,
-            }))
-          )
-        );
+return next(
+  new ApiError(
+    HTTP_STATUS.BAD_REQUEST,
+    "Validation failed",
+    error.issues.map((issue) => ({
+      field: issue.path.join("."),
+      message: issue.message,
+    }))
+  )
+);
       }
 
       next(error);

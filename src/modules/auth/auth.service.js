@@ -37,47 +37,50 @@ const authService = {
       password: hashedPassword,
     };
 
-    const createdUser = await authRepository.createUser(newUser);
-
-    delete createdUser.password;
-
-    return createdUser;
+    const { password, ...safeUser } = newUser;
+    return safeUser;
   },
 
-  async loginUser(email, password) {
-    const user = await authRepository.findUserByEmail(email);
+async loginUser(email, password) {
+  const user = await authRepository.findUserByEmail(email);
 
-    if (!user) {
-      throw new ApiError(
-        HTTP_STATUS.UNAUTHORIZED,
-        "Invalid email or password"
-      );
-    }
-
-    const isPasswordCorrect = await comparePassword(
-      password,
-      user.password
+  if (!user) {
+    throw new ApiError(
+      HTTP_STATUS.UNAUTHORIZED,
+      "Invalid email or password"
     );
+  }
 
-    if (!isPasswordCorrect) {
-      throw new ApiError(
-        HTTP_STATUS.UNAUTHORIZED,
-        "Invalid email or password"
-      );
-    }
+  if (!user.isActive) {
+    throw new ApiError(
+      HTTP_STATUS.FORBIDDEN,
+      "Your account is inactive."
+    );
+  }
 
-    const token = generateToken({
-      id: user.id,
-      role: user.role,
-    });
+  const isPasswordCorrect = await comparePassword(
+    password,
+    user.password
+  );
 
-    delete user.password;
+  if (!isPasswordCorrect) {
+    throw new ApiError(
+      HTTP_STATUS.UNAUTHORIZED,
+      "Invalid email or password"
+    );
+  }
 
-    return {
-      user,
-      token,
-    };
-  },
+  const accessToken = generateToken({
+    id: user.id,
+    role: user.role,
+  });
+
+  const { password: _, ...safeUser } = user;
+
+  return {
+    accessToken,
+    user: safeUser,
+  };
+}
 };
-
 export default authService;

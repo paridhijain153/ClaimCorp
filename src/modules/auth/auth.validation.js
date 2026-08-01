@@ -25,8 +25,8 @@ export const createUserSchema = z
     email: z.string().trim().email(),
     password: z
       .string()
-      .min(8)
-      .max(50)
+      .min(8, "Password must contain at least 8 characters")
+      .max(50, "Password must not exceed 50 characters")
       .regex(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).+$/
       ),
