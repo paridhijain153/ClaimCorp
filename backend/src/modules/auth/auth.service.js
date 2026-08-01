@@ -1,12 +1,11 @@
-import authRepository from "./auth.repository.js";
 import { hashPassword, comparePassword } from "../../utils/hashPassword.js";
 import { generateToken } from "../../utils/jwt.js";
 import ApiError from "../../utils/ApiError.js";
 import { HTTP_STATUS, ROLES } from "../../utils/constants.js";
-
+import userRepository from "../users/users.repository.js";
 const authService = {
   async registerUser(userData) {
-    const existingUser = await authRepository.findUserByEmail(
+    const existingUser = await userRepository.findUserByEmail(
       userData.email
     );
 
@@ -18,7 +17,7 @@ const authService = {
     }
 
     if (userData.role === ROLES.EMPLOYEE) {
-      const manager = await authRepository.findManager(
+      const manager = await userRepository.findManager(
         userData.managerId
       );
 
@@ -42,7 +41,7 @@ const authService = {
   },
 
 async loginUser(email, password) {
-  const user = await authRepository.findUserByEmail(email);
+  const user = await userRepository.findUserByEmail(email);
 
   if (!user) {
     throw new ApiError(

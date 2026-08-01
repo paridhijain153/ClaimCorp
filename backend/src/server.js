@@ -7,6 +7,7 @@ app.listen(env.PORT, () => {
 🚀 ClaimCorp Server Started
 🌐 Environment : ${env.NODE_ENV}
 📦 Port        : ${env.PORT}
+link : http://localhost:${env.PORT}
 =================================
 `);
 });

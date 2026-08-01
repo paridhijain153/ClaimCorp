@@ -5,10 +5,7 @@ import { HTTP_STATUS } from "../../utils/constants.js";
 
 const usersController = {
   createUser: asyncHandler(async (req, res) => {
-    const user = await usersService.createUser({
-  userData: req.body,
-  createdBy: req.user,
-});
+    const user = await usersService.createUser(req.body);
 
     return res.status(HTTP_STATUS.CREATED).json(
       new ApiResponse(
