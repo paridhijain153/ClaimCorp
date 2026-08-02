@@ -48,7 +48,14 @@ const receiptsRepository = {
       },
     });
   },
-
+  updateReceipt(id, data) {
+  return prisma.receipt.update({
+    where: {
+      id,
+    },
+    data,
+  });
+},
   deleteReceipt(id) {
     return prisma.receipt.delete({
       where: {
@@ -56,6 +63,7 @@ const receiptsRepository = {
       },
     });
   },
+
 };
 
 export default receiptsRepository;

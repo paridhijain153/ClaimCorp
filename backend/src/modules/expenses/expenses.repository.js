@@ -59,6 +59,16 @@ const expensesRepository = {
       include: expenseInclude,
     });
   },
+  findLatestReceipt(expenseId) {
+  return prisma.receipt.findFirst({
+    where: {
+      expenseId,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+},
 };
 
 export default expensesRepository;

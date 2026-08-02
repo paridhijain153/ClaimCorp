@@ -72,6 +72,20 @@ submitExpense: asyncHandler(async (req, res) => {
     )
   );
 }),
+async autofillExpense(req, res) {
+  const expense =
+    await expensesService.autofillExpense(
+      req.params.id,
+      req.user.id
+    );
+
+  res.status(200).json(
+    new ApiResponse(
+      "Expense autofilled successfully.",
+      expense
+    )
+  );
+},
 };
 
 export default expensesController;
