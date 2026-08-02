@@ -1,0 +1,83 @@
+import prisma from "../../config/prisma.js";
+const expenseInclude = {
+    employee: {
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
+    },
+    category:{
+        select: {
+            id: true,
+            name: true,
+        },
+    },
+    receipts: true,
+    }
+const expensesRepository = {
+  createExpense(data) {
+    return prisma.expense.create({
+      data,
+      include: {
+        category: true,
+        employee: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      },
+    });
+  },
+
+  findExpenseById(id) {
+    return prisma.expense.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        category: true,
+        receipts: true,
+        employee: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      },
+    });
+  },
+
+  findCategory(id) {
+    return prisma.category.findUnique({
+      where: {
+        id,
+      },
+    });
+  },
+  findExpensesByEmployee(employeeId) {
+  return prisma.expense.findMany({
+    where: {
+      employeeId,
+    },
+    include: expenseInclude,
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+},
+updateExpense(id, data) {
+  return prisma.expense.update({
+    where: {
+      id,
+    },
+    data,
+    include: expenseInclude,
+  });
+},
+};
+
+export default expensesRepository;
