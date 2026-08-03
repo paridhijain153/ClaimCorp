@@ -72,6 +72,19 @@ async getDashboardStats(req, res) {
     )
   );
 },
+async getCategoryAnalytics(req, res) {
+  const analytics =
+    await managerService.getCategoryAnalytics(
+      req.user.id
+    );
+
+  res.status(200).json(
+    new ApiResponse(
+      "Category analytics fetched successfully.",
+      analytics
+    )
+  );
+},
 };
 
 export default managerController;

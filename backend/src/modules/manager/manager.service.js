@@ -110,6 +110,11 @@ async getDashboardStats(managerId) {
     managerId
   );
 },
+async getCategoryAnalytics(managerId) {
+  return managerRepository.getCategoryAnalytics(
+    managerId
+  );
+},
 };
 
 export default managerService;
