@@ -31,13 +31,20 @@ const authService = {
 
     const hashedPassword = await hashPassword(userData.password);
 
-    const newUser = {
-      ...userData,
-      password: hashedPassword,
-    };
+const newUser = {
+  ...userData,
+  password: hashedPassword,
+};
 
-    const { password, ...safeUser } = newUser;
-    return safeUser;
+const createdUser =
+  await userRepository.createUser(newUser);
+
+const {
+  password,
+  ...safeUser
+} = createdUser;
+
+return safeUser;
   },
 
 async loginUser(email, password) {

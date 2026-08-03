@@ -118,6 +118,49 @@ const managerRepository = {
       approvedAmount._sum.totalAmount || 0,
   };
 },
+async getCategoryAnalytics(managerId) {
+  const analytics = await prisma.expense.groupBy({
+    by: ["categoryId"],
+
+    where: {
+      employee: {
+        managerId,
+      },
+      status: EXPENSE_STATUS.APPROVED,
+    },
+
+    _count: {
+      id: true,
+    },
+
+    _sum: {
+      totalAmount: true,
+    },
+  });
+
+  const categories =
+    await prisma.category.findMany({
+      select: {
+        id: true,
+        name: true,
+      },
+    });
+
+  return analytics.map((item) => {
+    const category = categories.find(
+      (c) => c.id === item.categoryId
+    );
+
+    return {
+      category: category?.name ?? "Unknown",
+
+      expenseCount: item._count.id,
+
+      totalAmount:
+        item._sum.totalAmount ?? 0,
+    };
+  });
+},
 };
 
 export default managerRepository;

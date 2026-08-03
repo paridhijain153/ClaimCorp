@@ -6,6 +6,7 @@ import categoryRoutes from "../modules/categories/categories.routes.js";
 import expenseRoutes from "../modules/expenses/expenses.routes.js";
 import managerRoutes from "../modules/manager/manager.routes.js";
 import receiptsRoutes from "../modules/receipts/receipts.routes.js";
+import analyticRoutes from "../modules/analytics/analytics.routes.js";  
 
 const router = Router();
 router.get("/", (req, res) => {
@@ -22,5 +23,5 @@ router.use("/categories", categoryRoutes);
 router.use("/expenses", expenseRoutes);
 router.use("/manager", managerRoutes);
 router.use("/receipts", receiptsRoutes);
-
+router.use("/analytics", analyticRoutes);
 export default router;

@@ -17,6 +17,12 @@ router.get(
   managerController.getDashboardStats
 );
 router.get(
+  "/analytics/categories",
+  authenticate,
+  authorize(ROLES.MANAGER),
+  managerController.getCategoryAnalytics
+);
+router.get(
   "/expenses",
   authenticate,
   authorize(ROLES.MANAGER),
