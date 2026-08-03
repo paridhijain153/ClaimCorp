@@ -2,7 +2,6 @@ import receiptsService from "./receipts.service.js";
 import ApiResponse from "../../utils/ApiResponse.js";
 import asyncHandler from "../../utils/asyncHandler.js";
 import { HTTP_STATUS } from "../../utils/constants.js";
-import { ROLES } from "../../utils/constants.js";
 
 const receiptsController = {
   uploadReceipt: asyncHandler(async (req, res) => {

@@ -44,7 +44,7 @@ const receiptsRepository = {
         expenseId,
       },
       orderBy: {
-        createdAt: "asc",
+        createdAt: "desc",
       },
     });
   },
