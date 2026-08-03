@@ -4,6 +4,7 @@ import ApiError from "../../utils/ApiError.js";
 import {
   HTTP_STATUS,
   EXPENSE_STATUS,
+  RECEIPT_PROCESSING_STATUS,
 } from "../../utils/constants.js";
 
 const expensesService = {
@@ -187,6 +188,65 @@ async submitExpense(expenseId, employeeId) {
 
   return submittedExpense;
 },
-};
+async autofillExpense(expenseId, employeeId) {
+  const expense =
+    await expensesRepository.findExpenseById(expenseId);
+
+  if (!expense) {
+    throw new ApiError(
+      HTTP_STATUS.NOT_FOUND,
+      "Expense not found."
+    );
+  }
+
+  if (expense.employee.id !== employeeId) {
+    throw new ApiError(
+      HTTP_STATUS.FORBIDDEN,
+      "You can only update your own expenses."
+    );
+  }
+
+  if (expense.status !== EXPENSE_STATUS.DRAFT) {
+    throw new ApiError(
+      HTTP_STATUS.BAD_REQUEST,
+      "Only draft expenses can be autofilled."
+    );
+  }
+
+  const receipt =
+    await expensesRepository.findLatestReceipt(expenseId);
+
+  if (!receipt) {
+    throw new ApiError(
+      HTTP_STATUS.BAD_REQUEST,
+      "No receipt found for this expense."
+    );
+  }
+
+  if (
+    receipt.processingStatus !==
+    RECEIPT_PROCESSING_STATUS.COMPLETED
+  ) {
+    throw new ApiError(
+      HTTP_STATUS.BAD_REQUEST,
+      "Receipt OCR is not completed yet."
+    );
+  }
+
+  const updatedExpense =
+    await expensesRepository.updateExpense(
+      expenseId,
+      {
+        amount: receipt.detectedAmount,
+        tax: receipt.detectedTax || 0,
+        totalAmount:
+          Number(receipt.detectedAmount || 0) +
+          Number(receipt.detectedTax || 0),
+      }
+    );
+
+  return updatedExpense;
+},
+}
 
 export default expensesService;

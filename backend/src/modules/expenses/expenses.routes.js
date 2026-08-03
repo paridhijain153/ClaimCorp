@@ -38,6 +38,12 @@ router.patch(
   expensesController.updateExpense
 );
 router.patch(
+  "/:id/autofill",
+  authenticate,
+  authorize(ROLES.EMPLOYEE),
+  expensesController.autofillExpense
+);
+router.patch(
   "/:id/submit",
   authenticate,
   authorize(ROLES.EMPLOYEE),

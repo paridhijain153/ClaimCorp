@@ -1,16 +1,18 @@
 import receiptsRepository from "./receipts.repository.js";
 import expensesRepository from "../expenses/expenses.repository.js";
 import uploadToCloudinary from "../../utils/uploadToCloudinary.js";
+import deleteFromCloudinary from "../../utils/deleteFromCloudinary.js";
+import aiService from "../ai/ai.service.js";
 
 import ApiError from "../../utils/ApiError.js";
 import {
   HTTP_STATUS,
   EXPENSE_STATUS,
 } from "../../utils/constants.js";
-import deleteFromCloudinary from "../../utils/deleteFromCloudinary.js";
 
 const receiptsService = {
   async uploadReceipt(expenseId, employeeId, file) {
+    // Validate file
     if (!file) {
       throw new ApiError(
         HTTP_STATUS.BAD_REQUEST,
@@ -18,10 +20,8 @@ const receiptsService = {
       );
     }
 
-    const expense =
-      await expensesRepository.findExpenseById(
-        expenseId
-      );
+    // Check expense
+    const expense = await expensesRepository.findExpenseById(expenseId);
 
     if (!expense) {
       throw new ApiError(
@@ -30,6 +30,7 @@ const receiptsService = {
       );
     }
 
+    // Ownership check
     if (expense.employee.id !== employeeId) {
       throw new ApiError(
         HTTP_STATUS.FORBIDDEN,
@@ -37,6 +38,7 @@ const receiptsService = {
       );
     }
 
+    // Draft only
     if (expense.status !== EXPENSE_STATUS.DRAFT) {
       throw new ApiError(
         HTTP_STATUS.BAD_REQUEST,
@@ -44,33 +46,85 @@ const receiptsService = {
       );
     }
 
-const uploadedFile =
-  await uploadToCloudinary(file.buffer);
+    // Upload image to Cloudinary
+    const uploadedFile = await uploadToCloudinary(file.buffer);
 
-try {
-  const receipt =
-    await receiptsRepository.createReceipt({
-      expenseId,
+    let receipt;
 
-      fileName: file.originalname,
+    try {
+      // Save receipt metadata
+      receipt = await receiptsRepository.createReceipt({
+        expenseId,
+        fileName: file.originalname,
+        fileUrl: uploadedFile.secure_url,
+        cloudinaryPublicId: uploadedFile.public_id,
+        mimeType: file.mimetype,
+        fileSize: file.size,
+      });
 
-      fileUrl: uploadedFile.secure_url,
+      // OCR started
+      await receiptsRepository.updateReceipt(receipt.id, {
+        processingStatus: "PROCESSING",
+      });
 
-      cloudinaryPublicId:
-        uploadedFile.public_id,
+      // Extract data using Gemini
+      const ocrData = await aiService.extractReceiptData(
+        file.buffer,
+        file.mimetype
+      );
+const fraudAnalysis =
+  aiService.calculateFraudScore(
+    expense,
+    ocrData
+  );
+      // Save OCR result
+      const updatedReceipt =
+  await receiptsRepository.updateReceipt(
+    receipt.id,
+    {
+      processingStatus: "COMPLETED",
 
-      mimeType: file.mimetype,
+      merchantName: ocrData.merchantName,
 
-      fileSize: file.size,
-    });
+      invoiceNumber: ocrData.invoiceNumber,
 
-  return receipt;
-} catch (error) {
-  await deleteFromCloudinary(
-    uploadedFile.public_id
+      invoiceDate: ocrData.invoiceDate
+        ? new Date(ocrData.invoiceDate)
+        : null,
+
+      detectedAmount: ocrData.amount,
+
+      detectedTax: ocrData.tax,
+
+      ocrText: ocrData.ocrText,
+
+      fraudScore: fraudAnalysis.fraudScore,
+
+      isFraudulent:
+        fraudAnalysis.isFraudulent,
+    }
   );
 
-  throw error;
-}}};
+      return updatedReceipt;
+    } catch (error) {
+      // Receipt never got created
+      if (!receipt) {
+        await deleteFromCloudinary(
+          uploadedFile.public_id
+        );
+      } else {
+        // Receipt exists but OCR failed
+        await receiptsRepository.updateReceipt(
+          receipt.id,
+          {
+            processingStatus: "FAILED",
+          }
+        );
+      }
+
+      throw error;
+    }
+  },
+};
 
 export default receiptsService;

@@ -35,6 +35,89 @@ const managerRepository = {
       },
     });
   },
+  async getDashboardStats(managerId) {
+  const [
+    pendingExpenses,
+    approvedExpenses,
+    rejectedExpenses,
+    fraudAlerts,
+    pendingAmount,
+    approvedAmount,
+  ] = await Promise.all([
+    prisma.expense.count({
+      where: {
+        employee: {
+          managerId,
+        },
+        status: EXPENSE_STATUS.SUBMITTED,
+      },
+    }),
+
+    prisma.expense.count({
+      where: {
+        employee: {
+          managerId,
+        },
+        status: EXPENSE_STATUS.APPROVED,
+      },
+    }),
+
+    prisma.expense.count({
+      where: {
+        employee: {
+          managerId,
+        },
+        status: EXPENSE_STATUS.REJECTED,
+      },
+    }),
+
+    prisma.receipt.count({
+      where: {
+        isFraudulent: true,
+        expense: {
+          employee: {
+            managerId,
+          },
+        },
+      },
+    }),
+
+    prisma.expense.aggregate({
+      where: {
+        employee: {
+          managerId,
+        },
+        status: EXPENSE_STATUS.SUBMITTED,
+      },
+      _sum: {
+        totalAmount: true,
+      },
+    }),
+
+    prisma.expense.aggregate({
+      where: {
+        employee: {
+          managerId,
+        },
+        status: EXPENSE_STATUS.APPROVED,
+      },
+      _sum: {
+        totalAmount: true,
+      },
+    }),
+  ]);
+
+  return {
+    pendingExpenses,
+    approvedExpenses,
+    rejectedExpenses,
+    fraudAlerts,
+    pendingAmount:
+      pendingAmount._sum.totalAmount || 0,
+    approvedAmount:
+      approvedAmount._sum.totalAmount || 0,
+  };
+},
 };
 
 export default managerRepository;

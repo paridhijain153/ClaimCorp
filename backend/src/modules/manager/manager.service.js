@@ -105,6 +105,11 @@ async rejectExpense(expenseId, managerId, managerComment) {
 
   return rejectedExpense;
 },
+async getDashboardStats(managerId) {
+  return managerRepository.getDashboardStats(
+    managerId
+  );
+},
 };
 
 export default managerService;

@@ -59,6 +59,19 @@ rejectExpense: asyncHandler(async (req, res) => {
     )
   );
 }),
+async getDashboardStats(req, res) {
+  const dashboard =
+    await managerService.getDashboardStats(
+      req.user.id
+    );
+
+  res.status(200).json(
+    new ApiResponse(
+      "Dashboard fetched successfully.",
+      dashboard
+    )
+  );
+},
 };
 
 export default managerController;
