@@ -10,7 +10,12 @@ import {rejectExpenseSchema} from "./manager.validation.js";
 import validate from "../../middleware/validate.js";
 
 const router = Router();
-
+router.get(
+  "/dashboard",
+  authenticate,
+  authorize(ROLES.MANAGER),
+  managerController.getDashboardStats
+);
 router.get(
   "/expenses",
   authenticate,

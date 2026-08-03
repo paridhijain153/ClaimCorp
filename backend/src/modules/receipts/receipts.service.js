@@ -72,26 +72,38 @@ const receiptsService = {
         file.buffer,
         file.mimetype
       );
-
+const fraudAnalysis =
+  aiService.calculateFraudScore(
+    expense,
+    ocrData
+  );
       // Save OCR result
       const updatedReceipt =
-        await receiptsRepository.updateReceipt(receipt.id, {
-          processingStatus: "COMPLETED",
+  await receiptsRepository.updateReceipt(
+    receipt.id,
+    {
+      processingStatus: "COMPLETED",
 
-          merchantName: ocrData.merchantName,
+      merchantName: ocrData.merchantName,
 
-          invoiceNumber: ocrData.invoiceNumber,
+      invoiceNumber: ocrData.invoiceNumber,
 
-          invoiceDate: ocrData.invoiceDate
-            ? new Date(ocrData.invoiceDate)
-            : null,
+      invoiceDate: ocrData.invoiceDate
+        ? new Date(ocrData.invoiceDate)
+        : null,
 
-          detectedAmount: ocrData.amount,
+      detectedAmount: ocrData.amount,
 
-          detectedTax: ocrData.tax,
+      detectedTax: ocrData.tax,
 
-          ocrText: ocrData.ocrText,
-        });
+      ocrText: ocrData.ocrText,
+
+      fraudScore: fraudAnalysis.fraudScore,
+
+      isFraudulent:
+        fraudAnalysis.isFraudulent,
+    }
+  );
 
       return updatedReceipt;
     } catch (error) {

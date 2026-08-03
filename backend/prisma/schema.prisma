@@ -136,4 +136,9 @@ model Receipt {
   detectedTax    Decimal? @db.Decimal(10, 2)
 
   createdAt DateTime @default(now())
+isDuplicate Boolean @default(false)
+
+fraudScore Float?
+
+isFraudulent Boolean @default(false)
 }
