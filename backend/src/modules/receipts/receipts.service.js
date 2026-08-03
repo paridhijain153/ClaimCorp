@@ -8,6 +8,7 @@ import ApiError from "../../utils/ApiError.js";
 import {
   HTTP_STATUS,
   EXPENSE_STATUS,
+  RECEIPT_PROCESSING_STATUS,
 } from "../../utils/constants.js";
 
 const receiptsService = {
@@ -64,7 +65,7 @@ const receiptsService = {
 
       // OCR started
       await receiptsRepository.updateReceipt(receipt.id, {
-        processingStatus: "PROCESSING",
+        processingStatus: RECEIPT_PROCESSING_STATUS.PROCESSING,
       });
 
       // Extract data using Gemini
@@ -82,7 +83,7 @@ const fraudAnalysis =
   await receiptsRepository.updateReceipt(
     receipt.id,
     {
-      processingStatus: "COMPLETED",
+      processingStatus: RECEIPT_PROCESSING_STATUS.COMPLETED,
 
       merchantName: ocrData.merchantName,
 
@@ -117,7 +118,7 @@ const fraudAnalysis =
         await receiptsRepository.updateReceipt(
           receipt.id,
           {
-            processingStatus: "FAILED",
+            processingStatus: RECEIPT_PROCESSING_STATUS.FAILED,
           }
         );
       }

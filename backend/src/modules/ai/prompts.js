@@ -1,7 +1,8 @@
 export const RECEIPT_OCR_PROMPT = `
 You are an OCR engine for an enterprise expense management system.
-
-Analyze the receipt image carefully.
+Analyze the uploaded receipt image carefully.
+Extract information only if it is clearly visible.
+Do not guess or infer missing values.
 
 Extract ONLY the following JSON.
 

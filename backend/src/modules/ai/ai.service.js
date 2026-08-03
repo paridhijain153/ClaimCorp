@@ -7,11 +7,8 @@ import { receiptOCRSchema } from "./schemas.js";
 
 const aiService = {
   async extractReceiptData(fileBuffer, mimeType) {
-    console.log("1. Starting OCR...");
 
     const base64Image = fileBuffer.toString("base64");
-
-    console.log("2. Calling Gemini...");
 
     const response = await ai.models.generateContent({
   model: GEMINI_MODELS.FLASH,
@@ -31,11 +28,7 @@ const aiService = {
   },
 });
 
-    console.log("3. Gemini responded!");
-
     const parsedData = parseGeminiJSON(response.text);
-
-    console.log("4. Parsed successfully!");
 
     return receiptOCRSchema.parse(parsedData);
   },

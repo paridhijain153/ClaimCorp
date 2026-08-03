@@ -59,7 +59,7 @@ rejectExpense: asyncHandler(async (req, res) => {
     )
   );
 }),
-async getDashboardStats(req, res) {
+getDashboardStats: asyncHandler(async (req, res) => {
   const dashboard =
     await managerService.getDashboardStats(
       req.user.id
@@ -71,8 +71,8 @@ async getDashboardStats(req, res) {
       dashboard
     )
   );
-},
-async getCategoryAnalytics(req, res) {
+},),
+getCategoryAnalytics: asyncHandler(async (req, res) => {
   const analytics =
     await managerService.getCategoryAnalytics(
       req.user.id
@@ -84,7 +84,7 @@ async getCategoryAnalytics(req, res) {
       analytics
     )
   );
-},
+},),
 };
 
 export default managerController;
