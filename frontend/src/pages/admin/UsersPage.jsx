@@ -6,12 +6,16 @@ import {
 
 import UsersTable from "../../components/tables/UsersTable";
 import CreateUserModal from "../../components/common/CreateUserModal";
+import ResetPasswordModal from "../../components/common/ResetPasswordModal";
 import Button from "../../components/ui/Button";
+
+import toast from "react-hot-toast";
 
 import {
   getUsers,
   updateUserStatus,
   createUser,
+  resetUserPassword,
 } from "../../services/users.service";
 
 function UsersPage() {
@@ -21,11 +25,31 @@ function UsersPage() {
 
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [search, setSearch] = useState("");
-  const [roleFilter, setRoleFilter] = useState("ALL");
-  const [statusFilter, setStatusFilter] = useState("ALL");
-  const [sortBy, setSortBy] = useState("NAME_ASC");
+
+  const [isModalOpen, setIsModalOpen] =
+    useState(false);
+
+  const [
+    isResetModalOpen,
+    setIsResetModalOpen,
+  ] = useState(false);
+
+  const [selectedUser, setSelectedUser] =
+    useState(null);
+
+  const [search, setSearch] =
+    useState("");
+
+  const [roleFilter, setRoleFilter] =
+    useState("ALL");
+
+  const [
+    statusFilter,
+    setStatusFilter,
+  ] = useState("ALL");
+
+  const [sortBy, setSortBy] =
+    useState("NAME_ASC");
 
   // ==========================
   // Derived Data
@@ -131,9 +155,39 @@ function UsersPage() {
         user.id,
         !user.isActive
       );
+
       await loadUsers();
     } catch (error) {
       console.error(error);
+    }
+  }
+
+  // ==========================
+  // Reset Password
+  // ==========================
+
+  async function handleResetPassword(
+    passwordData
+  ) {
+    try {
+      await resetUserPassword(
+        selectedUser.id,
+        passwordData
+      );
+
+      toast.success(
+        "Password reset successfully."
+      );
+
+      setIsResetModalOpen(false);
+      setSelectedUser(null);
+    } catch (error) {
+      console.error(error);
+
+      toast.error(
+        error?.response?.data?.message ||
+          "Failed to reset password."
+      );
     }
   }
 
@@ -153,8 +207,7 @@ function UsersPage() {
       </div>
     );
   }
-
-  // ==========================
+    // ==========================
   // UI
   // ==========================
 
@@ -166,8 +219,17 @@ function UsersPage() {
           <h2 className="text-lg font-semibold tracking-tight text-brand-900">
             Directory Management
           </h2>
+
           <p className="mt-0.5 text-sm text-brand-500">
-            Showing <span className="font-medium text-brand-900">{filteredUsers.length}</span> of <span className="font-medium text-brand-900">{users.length}</span> registered users
+            Showing{" "}
+            <span className="font-medium text-brand-900">
+              {filteredUsers.length}
+            </span>{" "}
+            of{" "}
+            <span className="font-medium text-brand-900">
+              {users.length}
+            </span>{" "}
+            registered users
           </p>
         </div>
 
@@ -241,10 +303,14 @@ function UsersPage() {
         </select>
       </div>
 
-      {/* Users Table Component */}
+      {/* Users Table */}
       <UsersTable
         users={filteredUsers}
         onToggleStatus={handleToggleStatus}
+        onResetPassword={(user) => {
+          setSelectedUser(user);
+          setIsResetModalOpen(true);
+        }}
       />
 
       {/* Create User Modal */}
@@ -253,6 +319,17 @@ function UsersPage() {
         onClose={() => setIsModalOpen(false)}
         onCreateUser={handleCreateUser}
         managers={managers}
+      />
+
+      {/* Reset Password Modal */}
+      <ResetPasswordModal
+        isOpen={isResetModalOpen}
+        user={selectedUser}
+        onClose={() => {
+          setIsResetModalOpen(false);
+          setSelectedUser(null);
+        }}
+        onResetPassword={handleResetPassword}
       />
     </div>
   );

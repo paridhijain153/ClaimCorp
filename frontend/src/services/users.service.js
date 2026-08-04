@@ -27,3 +27,16 @@ export const updateUserStatus = async (
 
   return response.data.data;
 };
+export const resetUserPassword = async (
+  id,
+  newPassword
+) => {
+  const response = await api.patch(
+    `/users/${id}/reset-password`,
+    {
+      newPassword,
+    }
+  );
+
+  return response.data.data;
+};

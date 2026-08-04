@@ -63,8 +63,14 @@ function EmployeeDashboard() {
     (expense) => expense.status === "APPROVED"
   ).length;
 
-  const totalAmount = expenses.reduce(
-    (sum, expense) => sum + Number(expense.totalAmount || 0),
+  const totalReimbursed = expenses
+  .filter(
+    (expense) =>
+      expense.status === "APPROVED"
+  )
+  .reduce(
+    (sum, expense) =>
+      sum + Number(expense.totalAmount || 0),
     0
   );
 
@@ -96,9 +102,9 @@ function EmployeeDashboard() {
         />
 
         <StatCard
-          title="Total Claimed"
-          subtitle="Overall sum value"
-          value={`₹${totalAmount.toLocaleString()}`}
+          title="Total Reimbursed"
+          subtitle="Amount approved for reimbursement"
+          value={`₹${totalReimbursed.toLocaleString()}`}
           icon={IndianRupee}
         />
       </div>
