@@ -42,6 +42,24 @@ const usersRepository = {
       },
     });
   },
+  findAllUsers() {
+  return prisma.user.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      department: true,
+      designation: true,
+      isActive: true,
+      managerId: true,
+      createdAt: true,
+    },
+  });
+},
 };
 
 export default usersRepository;

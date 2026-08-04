@@ -25,9 +25,6 @@ const categoriesRepository = {
 
   findAllCategories() {
     return prisma.category.findMany({
-        where: {
-          isActive: true,
-        },
       orderBy: {
         createdAt: "desc",
       },

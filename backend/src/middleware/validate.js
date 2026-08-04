@@ -1,6 +1,6 @@
 import { ZodError } from "zod";
 import ApiError from "../utils/ApiError.js";
-
+import { HTTP_STATUS } from "../utils/constants.js";
 const validate = (schema) => {
   return (req, res, next) => {
     try {

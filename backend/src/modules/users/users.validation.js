@@ -62,3 +62,7 @@ export const assignManagerSchema = z.object({
     .trim()
     .min(1, "Manager ID is required"),
 });
+
+export const updateUserStatusSchema = z.object({
+    isActive: z.boolean(),
+});

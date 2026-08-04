@@ -18,6 +18,31 @@ const categoriesController = {
         )
       );
   }),
+  getAllCategories: asyncHandler(async (req, res) => {
+  const categories =
+    await categoriesService.getAllCategories();
+
+  return res.status(HTTP_STATUS.OK).json(
+    new ApiResponse(
+      "Categories fetched successfully.",
+      categories
+    )
+  );
+}),
+updateCategoryStatus: asyncHandler(async (req, res) => {
+  const category =
+    await categoriesService.updateCategoryStatus(
+      req.params.id,
+      req.body.isActive
+    );
+
+  return res.status(HTTP_STATUS.OK).json(
+    new ApiResponse(
+      "Category status updated successfully.",
+      category
+    )
+  );
+}),
 };
 
 export default categoriesController;

@@ -39,6 +39,19 @@ const analyticsController = {
       )
     );
   }),
+  async getDashboard(req, res) {
+  const dashboard =
+    await analyticsService.getDashboard(
+      req.user
+    );
+
+  res.status(HTTP_STATUS.OK).json(
+    new ApiResponse(
+      "Dashboard fetched successfully.",
+      dashboard
+    )
+  );
+},
 };
 
 export default analyticsController;

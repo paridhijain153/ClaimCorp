@@ -14,6 +14,9 @@ async getEmployeeAnalytics(user) {
     user
   );
 },
+async getDashboard(user) {
+  return analyticsRepository.getDashboard(user);
+},
 };
 
 export default analyticsService;
