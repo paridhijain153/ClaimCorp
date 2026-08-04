@@ -1,7 +1,16 @@
+import { BrowserRouter } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "./contexts/AuthContext";
+import App from "./App";
+import "./index.css";
 
-<AuthProvider>
+import ReactDOM from "react-dom/client";
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <AuthProvider>
     <BrowserRouter>
-        <App />
+      <Toaster position="top-right" />
+      <App />
     </BrowserRouter>
-</AuthProvider>
+  </AuthProvider>
+);
