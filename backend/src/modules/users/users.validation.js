@@ -66,3 +66,13 @@ export const assignManagerSchema = z.object({
 export const updateUserStatusSchema = z.object({
     isActive: z.boolean(),
 });
+export const resetPasswordSchema = z.object({
+  newPassword: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .max(50, "Password cannot exceed 50 characters")
+    .regex(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).+$/,
+      "Password must contain uppercase, lowercase, number and special character"
+    ),
+});

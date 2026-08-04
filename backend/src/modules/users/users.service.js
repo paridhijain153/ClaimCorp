@@ -95,6 +95,33 @@ async updateUserStatus(
 
   return safeUser;
 },
+async resetUserPassword(
+  userId,
+  newPassword
+) {
+  const user =
+    await usersRepository.findUserById(
+      userId
+    );
+
+  if (!user) {
+    throw new ApiError(
+      HTTP_STATUS.NOT_FOUND,
+      "User not found."
+    );
+  }
+
+  const hashedPassword =
+    await hashPassword(newPassword);
+
+  const updatedUser =
+    await usersRepository.updateUserPassword(
+      userId,
+      hashedPassword
+    );
+
+  return updatedUser;
+},
 };
 
 export default usersService;

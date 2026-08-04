@@ -60,6 +60,21 @@ const usersRepository = {
     },
   });
 },
+updateUserPassword(id, password) {
+  return prisma.user.update({
+    where: {
+      id,
+    },
+    data: {
+      password,
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+    },
+  });
+},
 };
 
 export default usersRepository;

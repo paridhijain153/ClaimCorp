@@ -39,6 +39,20 @@ updateUserStatus: asyncHandler(async (req, res) => {
     )
   );
 }),
+resetUserPassword: asyncHandler(async (req, res) => {
+  const user =
+    await usersService.resetUserPassword(
+      req.params.id,
+      req.body.newPassword
+    );
+
+  return res.status(HTTP_STATUS.OK).json(
+    new ApiResponse(
+      "Password reset successfully.",
+      user
+    )
+  );
+}),
 };
 
 export default usersController;
