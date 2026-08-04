@@ -1,6 +1,9 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import Input from "../ui/Input";
+import Button from "../ui/Button";
+
 import { categorySchema } from "../../pages/admin/categorySchema";
 
 function CategoryForm({
@@ -10,7 +13,7 @@ function CategoryForm({
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(categorySchema),
     defaultValues: {
@@ -18,39 +21,33 @@ function CategoryForm({
     },
   });
 
-  function handleFormSubmit(data) {
-    onSubmit(data);
-
+  async function handleFormSubmit(data) {
+    await onSubmit(data);
     reset();
   }
 
   return (
     <form
       onSubmit={handleSubmit(handleFormSubmit)}
-      className="space-y-5"
+      className="space-y-4"
     >
-      <div>
-        <label className="mb-2 block font-medium">
-          Category Name
-        </label>
+      <Input
+        label="Category Name"
+        placeholder="e.g., Travel, Software, Office Supplies"
+        error={errors.name?.message}
+        {...register("name")}
+      />
 
-        <input
-          {...register("name")}
-          placeholder="Enter category name"
-          className="w-full rounded-lg border px-4 py-2"
-        />
-
-        <p className="mt-1 text-sm text-red-500">
-          {errors.name?.message}
-        </p>
+      <div className="pt-2">
+        <Button
+          type="submit"
+          variant="primary"
+          loading={isSubmitting}
+          className="w-full justify-center"
+        >
+          Create Category
+        </Button>
       </div>
-
-      <button
-        type="submit"
-        className="w-full rounded-lg bg-blue-600 py-3 font-medium text-white transition hover:bg-blue-700"
-      >
-        Create Category
-      </button>
     </form>
   );
 }

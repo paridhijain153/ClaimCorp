@@ -3,16 +3,14 @@ import { Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import ExpensesTable from "../../components/tables/ExpensesTable";
+import Button from "../../components/ui/Button";
 import { getMyExpenses } from "../../services/expense.service";
 
 function MyExpensesPage() {
   const navigate = useNavigate();
 
-  const [expenses, setExpenses] =
-    useState([]);
-
-  const [loading, setLoading] =
-    useState(true);
+  const [expenses, setExpenses] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     loadExpenses();
@@ -20,9 +18,7 @@ function MyExpensesPage() {
 
   async function loadExpenses() {
     try {
-      const data =
-        await getMyExpenses();
-
+      const data = await getMyExpenses();
       setExpenses(data);
     } catch (error) {
       console.error(error);
@@ -33,55 +29,42 @@ function MyExpensesPage() {
 
   if (loading) {
     return (
-      <div className="py-20 text-center">
-        Loading expenses...
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="text-center">
+          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-border border-t-brand-900" />
+          <p className="mt-4 text-sm font-medium text-brand-500">
+            Loading expenses...
+          </p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8">
-
-      <div className="flex items-center justify-between">
-
+    <div className="space-y-6">
+      {/* Action Header Bar */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold">
-            My Expenses
-          </h1>
-
-          <p className="mt-2 text-slate-500">
-            View and manage your expenses.
+          <h2 className="text-lg font-semibold tracking-tight text-brand-900">
+            Expense Claims Management
+          </h2>
+          <p className="mt-0.5 text-sm text-brand-500">
+            View, track, and manage all your submitted reimbursement reports.
           </p>
         </div>
 
-        <button
-          onClick={() =>
-            navigate("/employee/create-expense")
-          }
-          className="flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-white hover:bg-blue-700"
+        <Button
+          variant="primary"
+          onClick={() => navigate("/employee/create-expense")}
+          className="gap-2"
         >
-          <Plus size={18} />
+          <Plus size={16} />
           New Expense
-        </button>
-
+        </Button>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-
-        <div className="border-b p-6">
-
-          <h2 className="text-lg font-semibold">
-            All Expenses
-          </h2>
-
-        </div>
-
-        <ExpensesTable
-          expenses={expenses}
-        />
-
-      </div>
-
+      {/* Expenses Table Component */}
+      <ExpensesTable expenses={expenses} />
     </div>
   );
 }

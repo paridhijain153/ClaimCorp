@@ -39,37 +39,33 @@ function PendingExpensesPage() {
 
   if (loading) {
     return (
-      <div className="py-20 text-center">
-        Loading...
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="text-center">
+          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-border border-t-brand-900" />
+          <p className="mt-4 text-sm font-medium text-brand-500">
+            Loading pending approvals...
+          </p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8">
-
+    <div className="space-y-6">
+      {/* Action Header Bar */}
       <div>
-
-        <h1 className="text-3xl font-bold">
-          Pending Expenses
-        </h1>
-
-        <p className="mt-2 text-slate-500">
-          Review submitted employee expenses.
+        <h2 className="text-lg font-semibold tracking-tight text-brand-900">
+          Pending Approvals Queue
+        </h2>
+        <p className="mt-0.5 text-sm text-brand-500">
+          Review and action submitted expense claims awaiting your authorization.
         </p>
-
       </div>
 
-      <div className="overflow-hidden rounded-2xl border bg-white shadow-sm">
-
-        <PendingExpensesTable
-          expenses={
-            expenses
-          }
-        />
-
-      </div>
-
+      {/* Pending Expenses Table Component */}
+      <PendingExpensesTable
+        expenses={expenses}
+      />
     </div>
   );
 }

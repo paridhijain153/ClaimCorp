@@ -1,5 +1,8 @@
 import { useRef, useState } from "react";
-import { Upload, FileText } from "lucide-react";
+import { Upload, FileText, ExternalLink } from "lucide-react";
+
+import Button from "../ui/Button";
+import Card from "../ui/Card";
 
 import { uploadReceipt } from "../../services/receipt.service";
 import { autofillExpense } from "../../services/expense.service";
@@ -10,21 +13,17 @@ function ReceiptSection({
   readOnly = false,
 }) {
   const receipts = expense.receipts || [];
-
   const fileInputRef = useRef(null);
-
   const [uploading, setUploading] = useState(false);
+  const [autofilling, setAutofilling] = useState(false);
 
   async function handleFileChange(e) {
     const file = e.target.files[0];
-
     if (!file) return;
 
     try {
       setUploading(true);
-
       await uploadReceipt(expense.id, file);
-
       await refreshExpense();
     } catch (error) {
       console.error(error);
@@ -35,60 +34,62 @@ function ReceiptSection({
 
   async function handleAutofill() {
     try {
+      setAutofilling(true);
       await autofillExpense(expense.id);
-
       await refreshExpense();
     } catch (error) {
       console.error(error);
+    } finally {
+      setAutofilling(false);
     }
   }
 
   return (
-    <div className="rounded-2xl border bg-white p-6 shadow-sm">
-      <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-xl font-semibold">
-          Receipts
-        </h2>
+    <Card className="p-6">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 className="text-base font-semibold text-brand-900">
+            Receipt Attachments
+          </h2>
+          <p className="text-xs text-brand-500">
+            Upload bills or invoices for automated OCR extraction and verification.
+          </p>
+        </div>
 
-        {!readOnly &&
-          expense.status === "DRAFT" && (
-            <>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*,.pdf"
-                className="hidden"
-                onChange={handleFileChange}
-              />
+        {!readOnly && expense.status === "DRAFT" && (
+          <div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*,.pdf"
+              className="hidden"
+              onChange={handleFileChange}
+            />
 
-              <button
-                disabled={uploading}
-                onClick={() => fileInputRef.current.click()}
-                className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:bg-slate-400"
-              >
-                <Upload size={18} />
-
-                {uploading
-                  ? "Uploading..."
-                  : "Upload Receipt"}
-              </button>
-            </>
-          )}
+            <Button
+              variant="secondary"
+              loading={uploading}
+              onClick={() => fileInputRef.current.click()}
+              className="gap-2"
+            >
+              <Upload size={16} />
+              {uploading ? "Uploading..." : "Upload Receipt"}
+            </Button>
+          </div>
+        )}
       </div>
 
       {receipts.length === 0 ? (
-        <div className="rounded-xl border-2 border-dashed p-12 text-center">
+        <div className="rounded-xl border border-dashed border-border p-10 text-center bg-surface">
           <FileText
-            size={40}
-            className="mx-auto text-slate-400"
+            size={36}
+            className="mx-auto text-brand-400"
           />
-
-          <h3 className="mt-4 text-lg font-medium">
-            No receipts uploaded
+          <h3 className="mt-3 text-sm font-semibold text-brand-900">
+            No receipts uploaded yet
           </h3>
-
-          <p className="mt-2 text-slate-500">
-            Upload a receipt before submitting this expense.
+          <p className="mt-1 text-xs text-brand-500">
+            Attach a digital receipt or scanned invoice to support your reimbursement claim.
           </p>
         </div>
       ) : (
@@ -96,17 +97,18 @@ function ReceiptSection({
           {receipts.map((receipt) => (
             <div
               key={receipt.id}
-              className="rounded-xl border p-5"
+              className="rounded-xl border border-border bg-surface p-5 shadow-soft transition-all"
             >
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <p className="font-semibold">
+                  <p className="font-semibold text-brand-900">
                     {receipt.fileName}
                   </p>
-
-                  <p className="mt-1 text-sm text-slate-500">
+                  <p className="mt-0.5 text-xs font-medium text-brand-500">
                     OCR Status:{" "}
-                    {receipt.processingStatus}
+                    <span className="font-semibold uppercase tracking-wider text-brand-700">
+                      {receipt.processingStatus}
+                    </span>
                   </p>
                 </div>
 
@@ -114,36 +116,31 @@ function ReceiptSection({
                   href={receipt.fileUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="rounded-lg border px-4 py-2 hover:bg-slate-100"
+                  className="inline-flex items-center gap-1.5 self-start rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-medium text-brand-700 transition-colors hover:bg-brand-50 sm:self-auto"
                 >
-                  View
+                  <ExternalLink size={14} />
+                  View File
                 </a>
               </div>
 
               {receipt.processingStatus === "COMPLETED" && (
-                <>
-                  <div className="mt-5 grid grid-cols-2 gap-4 rounded-xl bg-slate-50 p-4">
+                <div className="mt-4">
+                  <div className="grid grid-cols-2 gap-4 rounded-xl border border-border bg-background p-4 sm:grid-cols-4">
                     <Info
                       label="Merchant"
-                      value={
-                        receipt.merchantName ||
-                        "-"
-                      }
+                      value={receipt.merchantName || "-"}
                     />
 
                     <Info
-                      label="Invoice"
-                      value={
-                        receipt.invoiceNumber ||
-                        "-"
-                      }
+                      label="Invoice No."
+                      value={receipt.invoiceNumber || "-"}
                     />
 
                     <Info
                       label="Detected Amount"
                       value={
                         receipt.detectedAmount != null
-                          ? `₹${receipt.detectedAmount}`
+                          ? `₹${Number(receipt.detectedAmount).toLocaleString()}`
                           : "-"
                       }
                     />
@@ -152,51 +149,44 @@ function ReceiptSection({
                       label="Detected Tax"
                       value={
                         receipt.detectedTax != null
-                          ? `₹${receipt.detectedTax}`
+                          ? `₹${Number(receipt.detectedTax).toLocaleString()}`
                           : "-"
                       }
                     />
                   </div>
 
-                  {!readOnly &&
-                    expense.status === "DRAFT" && (
-                      <>
-                        <p className="mt-4 text-sm text-slate-500">
-                          If multiple receipts are uploaded, the most recently
-                          uploaded receipt will be used for Autofill.
-                        </p>
+                  {!readOnly && expense.status === "DRAFT" && (
+                    <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                      <p className="text-xs text-brand-400">
+                        * Most recently uploaded receipt is used for AI form autofill.
+                      </p>
 
-                        <div className="mt-5 flex justify-end">
-                          <button
-                            onClick={handleAutofill}
-                            className="rounded-lg bg-green-600 px-5 py-2 text-white hover:bg-green-700"
-                          >
-                            Autofill Expense
-                          </button>
-                        </div>
-                      </>
-                    )}
-                </>
+                      <Button
+                        variant="primary"
+                        loading={autofilling}
+                        onClick={handleAutofill}
+                      >
+                        Autofill Expense Form
+                      </Button>
+                    </div>
+                  )}
+                </div>
               )}
             </div>
           ))}
         </div>
       )}
-    </div>
+    </Card>
   );
 }
 
-function Info({
-  label,
-  value,
-}) {
+function Info({ label, value }) {
   return (
     <div>
-      <p className="text-sm text-slate-500">
+      <p className="text-xs font-medium text-brand-400">
         {label}
       </p>
-
-      <p className="mt-1 font-medium">
+      <p className="mt-1 text-sm font-semibold tabular-nums text-brand-900 truncate">
         {value}
       </p>
     </div>

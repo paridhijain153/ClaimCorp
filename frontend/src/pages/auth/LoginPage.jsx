@@ -58,26 +58,25 @@ function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-6">
-      <Card className="w-full max-w-md">
+    <div className="flex min-h-screen items-center justify-center bg-background px-6">
+      <Card className="w-full max-w-md p-8 sm:p-10 shadow-soft">
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold tracking-tight text-brand-900">
             ClaimCorp
           </h1>
-
-          <p className="mt-2 text-gray-500">
-            Enterprise Expense Management
+          <p className="mt-1 text-sm text-brand-500">
+            Enterprise Expense Management Portal
           </p>
         </div>
 
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="space-y-5"
+          className="space-y-4"
         >
           <Input
-            label="Email"
+            label="Email Address"
             type="email"
-            placeholder="Enter your email"
+            placeholder="name@company.com"
             error={errors.email?.message}
             {...register("email")}
           />
@@ -90,12 +89,16 @@ function LoginPage() {
             {...register("password")}
           />
 
-          <Button
-            type="submit"
-            loading={isSubmitting}
-          >
-            Sign In
-          </Button>
+          <div className="pt-2">
+            <Button
+              type="submit"
+              variant="primary"
+              loading={isSubmitting}
+              className="w-full justify-center"
+            >
+              Sign In
+            </Button>
+          </div>
         </form>
       </Card>
     </div>

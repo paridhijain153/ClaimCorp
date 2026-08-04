@@ -10,7 +10,8 @@ function CreateUserModal({
   return (
     <Modal
       isOpen={isOpen}
-      title="Create User"
+      title="Create New User"
+      description="Add a new employee or manager account to the organization directory."
       onClose={onClose}
     >
       <UserForm

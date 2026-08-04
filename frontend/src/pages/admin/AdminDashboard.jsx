@@ -44,8 +44,8 @@ function AdminDashboard() {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
         <div className="text-center">
-          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-blue-600" />
-          <p className="mt-4 text-sm font-medium text-gray-500">
+          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-border border-t-brand-900" />
+          <p className="mt-4 text-sm font-medium text-brand-500">
             Loading dashboard...
           </p>
         </div>
@@ -58,10 +58,10 @@ function AdminDashboard() {
       {/* User Overview */}
       <section className="space-y-4">
         <div>
-          <h2 className="text-lg font-medium tracking-tight text-gray-900">
+          <h2 className="text-lg font-semibold tracking-tight text-brand-900">
             User Overview
           </h2>
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-brand-500">
             Overview of registered users and organizational roles.
           </p>
         </div>
@@ -72,7 +72,7 @@ function AdminDashboard() {
             subtitle="All registered users"
             value={dashboard.totalUsers}
             icon={Users}
-            color="text-blue-600"
+            color="text-brand-900"
           />
 
           <StatCard
@@ -80,7 +80,7 @@ function AdminDashboard() {
             subtitle="Organization managers"
             value={dashboard.totalManagers}
             icon={UserCog}
-            color="text-violet-600"
+            color="text-brand-900"
           />
 
           <StatCard
@@ -88,7 +88,7 @@ function AdminDashboard() {
             subtitle="Registered employees"
             value={dashboard.totalEmployees}
             icon={UserCheck}
-            color="text-green-600"
+            color="text-brand-900"
           />
 
           <StatCard
@@ -96,7 +96,7 @@ function AdminDashboard() {
             subtitle="Expense categories"
             value={dashboard.totalCategories}
             icon={FolderOpen}
-            color="text-orange-600"
+            color="text-brand-900"
           />
         </div>
       </section>
@@ -104,10 +104,10 @@ function AdminDashboard() {
       {/* Expense Overview */}
       <section className="space-y-4">
         <div>
-          <h2 className="text-lg font-medium tracking-tight text-gray-900">
+          <h2 className="text-lg font-semibold tracking-tight text-brand-900">
             Expense Overview
           </h2>
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-brand-500">
             Current status of expense approvals across the organization.
           </p>
         </div>
@@ -118,7 +118,7 @@ function AdminDashboard() {
             subtitle="Awaiting manager review"
             value={dashboard.pendingExpenses}
             icon={Clock3}
-            color="text-orange-600"
+            color="text-amber-600"
           />
 
           <StatCard
@@ -126,7 +126,7 @@ function AdminDashboard() {
             subtitle="Successfully approved"
             value={dashboard.approvedExpenses}
             icon={CheckCircle2}
-            color="text-green-600"
+            color="text-emerald-600"
           />
 
           <StatCard
@@ -142,25 +142,25 @@ function AdminDashboard() {
       {/* Financial Summary */}
       <section className="space-y-4">
         <div>
-          <h2 className="text-lg font-medium tracking-tight text-gray-900">
+          <h2 className="text-lg font-semibold tracking-tight text-brand-900">
             Financial Summary
           </h2>
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-brand-500">
             Total approved reimbursement amount across the organization.
           </p>
         </div>
 
         <Card>
           <div className="flex flex-col justify-center py-2">
-            <p className="text-sm font-medium text-gray-500">
+            <p className="text-sm font-medium text-brand-500">
               Total Approved Amount
             </p>
 
-            <h2 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            <h2 className="mt-2 text-3xl font-bold tracking-tight tabular-nums text-brand-900 sm:text-4xl">
               ₹{Number(dashboard.totalApprovedAmount).toLocaleString()}
             </h2>
 
-            <p className="mt-2 max-w-2xl text-sm text-gray-500">
+            <p className="mt-2 max-w-2xl text-sm text-brand-500">
               Total reimbursement approved across all employees.
             </p>
           </div>

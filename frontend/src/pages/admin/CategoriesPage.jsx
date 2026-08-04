@@ -3,10 +3,12 @@ import { Plus } from "lucide-react";
 
 import CategoriesTable from "../../components/tables/CategoriesTable";
 import CreateCategoryModal from "../../components/common/CreateCategoryModal";
+import Button from "../../components/ui/Button";
 
 import {
   getCategories,
   createCategory,
+  updateCategoryStatus,
 } from "../../services/category.service";
 
 function CategoriesPage() {
@@ -14,14 +16,9 @@ function CategoriesPage() {
   // State
   // ==========================
 
-  const [categories, setCategories] =
-    useState([]);
-
-  const [loading, setLoading] =
-    useState(true);
-
-  const [isModalOpen, setIsModalOpen] =
-    useState(false);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // ==========================
   // Initial Load
@@ -37,9 +34,7 @@ function CategoriesPage() {
 
   async function loadCategories() {
     try {
-      const data =
-        await getCategories();
-
+      const data = await getCategories();
       setCategories(data);
     } catch (error) {
       console.error(error);
@@ -56,12 +51,26 @@ function CategoriesPage() {
     categoryData
   ) {
     try {
-      await createCategory(
-        categoryData
-      );
-
+      await createCategory(categoryData);
       setIsModalOpen(false);
+      await loadCategories();
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
+  // ==========================
+  // Activate / Deactivate
+  // ==========================
+
+  async function handleToggleStatus(
+    category
+  ) {
+    try {
+      await updateCategoryStatus(
+        category.id,
+        !category.isActive
+      );
       await loadCategories();
     } catch (error) {
       console.error(error);
@@ -74,8 +83,13 @@ function CategoriesPage() {
 
   if (loading) {
     return (
-      <div className="py-20 text-center">
-        Loading categories...
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="text-center">
+          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-border border-t-brand-900" />
+          <p className="mt-4 text-sm font-medium text-brand-500">
+            Loading categories...
+          </p>
+        </div>
       </div>
     );
   }
@@ -85,49 +99,39 @@ function CategoriesPage() {
   // ==========================
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
+    <div className="space-y-6">
+      {/* Action Header Bar */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold">
-            Categories
-          </h1>
-
-          <p className="mt-2 text-slate-500">
-            Manage expense categories.
+          <h2 className="text-lg font-semibold tracking-tight text-brand-900">
+            Category Management
+          </h2>
+          <p className="mt-0.5 text-sm text-brand-500">
+            Configure available classification tags for expense creation.
           </p>
         </div>
 
-        <button
-          onClick={() =>
-            setIsModalOpen(true)
-          }
-          className="flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-white hover:bg-blue-700"
+        <Button
+          variant="primary"
+          onClick={() => setIsModalOpen(true)}
+          className="gap-2"
         >
-          <Plus size={18} />
+          <Plus size={16} />
           Create Category
-        </button>
+        </Button>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <div className="border-b p-6">
-          <h2 className="text-lg font-semibold">
-            All Categories
-          </h2>
-        </div>
+      {/* Categories Table Component */}
+      <CategoriesTable
+        categories={categories}
+        onToggleStatus={handleToggleStatus}
+      />
 
-        <CategoriesTable
-          categories={categories}
-        />
-      </div>
-
+      {/* Create Category Modal */}
       <CreateCategoryModal
         isOpen={isModalOpen}
-        onClose={() =>
-          setIsModalOpen(false)
-        }
-        onCreateCategory={
-          handleCreateCategory
-        }
+        onClose={() => setIsModalOpen(false)}
+        onCreateCategory={handleCreateCategory}
       />
     </div>
   );

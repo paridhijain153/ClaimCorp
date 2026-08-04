@@ -9,7 +9,8 @@ function CreateCategoryModal({
   return (
     <Modal
       isOpen={isOpen}
-      title="Create Category"
+      title="Create Expense Category"
+      description="Add a new category classification to organize and track employee reimbursement claims."
       onClose={onClose}
     >
       <CategoryForm

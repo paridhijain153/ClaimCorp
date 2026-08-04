@@ -18,3 +18,15 @@ export const createCategory = async (
 
   return response.data.data;
 };
+
+export const updateCategoryStatus =
+  async (id, isActive) => {
+    const response = await api.patch(
+      `/categories/${id}/status`,
+      {
+        isActive,
+      }
+    );
+
+    return response.data.data;
+  };

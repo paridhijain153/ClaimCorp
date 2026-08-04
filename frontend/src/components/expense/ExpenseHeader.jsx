@@ -1,66 +1,34 @@
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import StatusBadge from "../common/StatusBadge";
 
 function ExpenseHeader({ expense }) {
   const navigate = useNavigate();
 
-  const statusColors = {
-    DRAFT:
-      "bg-yellow-100 text-yellow-700",
-
-    SUBMITTED:
-      "bg-blue-100 text-blue-700",
-
-    APPROVED:
-      "bg-green-100 text-green-700",
-
-    REJECTED:
-      "bg-red-100 text-red-700",
-
-    REIMBURSED:
-      "bg-purple-100 text-purple-700",
-  };
-
   return (
-    <div className="space-y-6">
-
+    <div className="space-y-4">
       <button
-        onClick={() =>
-          navigate("/employee/expenses")
-        }
-        className="flex items-center gap-2 text-slate-600 hover:text-slate-900"
+        onClick={() => navigate(-1)}
+        className="inline-flex items-center gap-2 text-xs font-medium text-brand-500 transition-colors hover:text-brand-900"
       >
-        <ArrowLeft size={18} />
-
-        Back to My Expenses
+        <ArrowLeft size={16} />
+        Back to Previous Page
       </button>
 
-      <div className="flex items-start justify-between">
-
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-
-          <h1 className="text-3xl font-bold">
+          <h1 className="text-xl font-bold tracking-tight text-brand-900 sm:text-2xl">
             {expense.title}
           </h1>
-
-          <p className="mt-2 text-slate-500">
+          <p className="mt-0.5 text-xs font-mono text-brand-400">
             {expense.expenseNumber}
           </p>
-
         </div>
 
-        <span
-          className={`rounded-full px-4 py-2 text-sm font-medium ${
-            statusColors[
-              expense.status
-            ]
-          }`}
-        >
-          {expense.status}
-        </span>
-
+        <div>
+          <StatusBadge status={expense.status} />
+        </div>
       </div>
-
     </div>
   );
 }
