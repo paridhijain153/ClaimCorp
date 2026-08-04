@@ -14,6 +14,31 @@ const usersController = {
       )
     );
   }),
+  getAllUsers: asyncHandler(async (req, res) => {
+  const users = await usersService.getAllUsers();
+
+  return res.status(HTTP_STATUS.OK).json(
+    new ApiResponse(
+      "Users fetched successfully.",
+      users
+    )
+  );
+}),
+updateUserStatus: asyncHandler(async (req, res) => {
+  const user =
+    await usersService.updateUserStatus(
+      req.params.id,
+      req.user.id,
+      req.body.isActive
+    );
+
+  return res.status(HTTP_STATUS.OK).json(
+    new ApiResponse(
+      "User status updated successfully.",
+      user
+    )
+  );
+}),
 };
 
 export default usersController;

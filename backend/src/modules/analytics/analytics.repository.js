@@ -153,6 +153,102 @@ async getEmployeeAnalytics(user) {
     };
   });
 },
+async getDashboard(user) {
+  const [
+    totalUsers,
+    totalEmployees,
+    totalManagers,
+    activeUsers,
+    inactiveUsers,
+    totalCategories,
+    pendingExpenses,
+    approvedExpenses,
+    rejectedExpenses,
+    fraudAlerts,
+    approvedAmount,
+  ] = await Promise.all([
+    prisma.user.count(),
+
+    prisma.user.count({
+      where: {
+        role: ROLES.EMPLOYEE,
+      },
+    }),
+
+    prisma.user.count({
+      where: {
+        role: ROLES.MANAGER,
+      },
+    }),
+
+    prisma.user.count({
+      where: {
+        isActive: true,
+      },
+    }),
+
+    prisma.user.count({
+      where: {
+        isActive: false,
+      },
+    }),
+
+    prisma.category.count(),
+
+    prisma.expense.count({
+      where: {
+        status: EXPENSE_STATUS.SUBMITTED,
+      },
+    }),
+
+    prisma.expense.count({
+      where: {
+        status: EXPENSE_STATUS.APPROVED,
+      },
+    }),
+
+    prisma.expense.count({
+      where: {
+        status: EXPENSE_STATUS.REJECTED,
+      },
+    }),
+
+    prisma.receipt.count({
+      where: {
+        isFraudulent: true,
+      },
+    }),
+
+    prisma.expense.aggregate({
+      where: {
+        status: EXPENSE_STATUS.APPROVED,
+      },
+      _sum: {
+        totalAmount: true,
+      },
+    }),
+  ]);
+
+  return {
+    totalUsers,
+    totalEmployees,
+    totalManagers,
+
+    activeUsers,
+    inactiveUsers,
+
+    totalCategories,
+
+    pendingExpenses,
+    approvedExpenses,
+    rejectedExpenses,
+
+    fraudAlerts,
+
+    totalApprovedAmount:
+      approvedAmount._sum.totalAmount || 0,
+  };
+},
 };
 
 export default analyticsRepository;

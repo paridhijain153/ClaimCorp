@@ -26,6 +26,32 @@ const categoriesService = {
     // Create category
     return categoriesRepository.createCategory(normalizedData);
   },
+  async getAllCategories() {
+  return categoriesRepository.findAllCategories();
+},
+async updateCategoryStatus(
+  categoryId,
+  isActive
+) {
+  const category =
+    await categoriesRepository.findCategoryById(
+      categoryId
+    );
+
+  if (!category) {
+    throw new ApiError(
+      HTTP_STATUS.NOT_FOUND,
+      "Category not found."
+    );
+  }
+
+  return categoriesRepository.updateCategory(
+    categoryId,
+    {
+      isActive,
+    }
+  );
+},
 };
 
 export default categoriesService;

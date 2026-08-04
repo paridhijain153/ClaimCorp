@@ -32,3 +32,7 @@ export const updateCategorySchema = z.object({
     .boolean()
     .optional(),
 });
+export const updateCategoryStatusSchema =
+  z.object({
+    isActive: z.boolean(),
+  });

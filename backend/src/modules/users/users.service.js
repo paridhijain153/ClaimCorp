@@ -56,6 +56,45 @@ const usersService = {
 
     return safeUser;
   },
+  async getAllUsers() {
+  return usersRepository.findAllUsers();
+},
+async updateUserStatus(
+  userId,
+  currentUserId,
+  isActive
+) {
+  const user =
+    await usersRepository.findUserById(userId);
+
+  if (!user) {
+    throw new ApiError(
+      HTTP_STATUS.NOT_FOUND,
+      "User not found."
+    );
+  }
+
+  // Admin cannot deactivate themselves
+  if (
+    user.id === currentUserId &&
+    isActive === false
+  ) {
+    throw new ApiError(
+      HTTP_STATUS.BAD_REQUEST,
+      "You cannot deactivate your own account."
+    );
+  }
+
+  const updatedUser =
+    await usersRepository.updateUser(userId, {
+      isActive,
+    });
+
+  const { password, ...safeUser } =
+    updatedUser;
+
+  return safeUser;
+},
 };
 
 export default usersService;
