@@ -2,7 +2,7 @@ import { Router } from "express";
 
 import usersController from "./users.controller.js";
 
-import { createUserSchema , updateUserStatusSchema} from "./users.validation.js";
+import { createUserSchema , updateUserStatusSchema , resetPasswordSchema} from "./users.validation.js";
 
 import authenticate from "../../middleware/authenticate.js";
 import authorize from "../../middleware/authorize.js";
@@ -29,5 +29,12 @@ router.patch(
   authorize(ROLES.ADMIN),
   validate(updateUserStatusSchema),
   usersController.updateUserStatus
+);
+router.patch(
+  "/:id/reset-password",
+  authenticate,
+  authorize(ROLES.ADMIN),
+  validate(resetPasswordSchema),
+  usersController.resetUserPassword
 );
 export default router;
