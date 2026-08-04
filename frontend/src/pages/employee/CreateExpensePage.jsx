@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
 import ExpenseForm from "../../components/forms/ExpenseForm";
+import Card from "../../components/ui/Card";
 
 import { createExpense } from "../../services/expense.service";
 
@@ -12,7 +13,6 @@ function CreateExpensePage() {
   ) {
     try {
       await createExpense(expenseData);
-
       navigate("/employee/expenses");
     } catch (error) {
       console.error(error);
@@ -20,26 +20,21 @@ function CreateExpensePage() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl space-y-8">
-
+    <div className="mx-auto max-w-3xl space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">
-          Create Expense
-        </h1>
-
-        <p className="mt-2 text-slate-500">
-          Create a new expense request.
+        <h2 className="text-lg font-semibold tracking-tight text-brand-900">
+          New Expense Claim
+        </h2>
+        <p className="mt-0.5 text-sm text-brand-500">
+          Fill in the details below to submit a new expense reimbursement request.
         </p>
       </div>
 
-      <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+      <Card className="p-6 sm:p-8">
         <ExpenseForm
-          onSubmit={
-            handleCreateExpense
-          }
+          onSubmit={handleCreateExpense}
         />
-      </div>
-
+      </Card>
     </div>
   );
 }

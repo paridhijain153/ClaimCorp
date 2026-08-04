@@ -6,16 +6,15 @@ function TableEmpty({
 }) {
   return (
     <tr>
-
-      <td colSpan={100}>
-
+      <td 
+        colSpan={100} 
+        className="px-6 py-16 align-middle text-center"
+      >
         <EmptyState
           title={title}
           description={description}
         />
-
       </td>
-
     </tr>
   );
 }

@@ -1,6 +1,9 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import Input from "../ui/Input";
+import Button from "../ui/Button";
+
 import { userSchema } from "../../pages/admin/userSchema";
 import { ROLES } from "../../constants/roles";
 
@@ -12,7 +15,7 @@ function UserForm({
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(userSchema),
     defaultValues: {
@@ -25,147 +28,94 @@ function UserForm({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="space-y-5"
+      className="space-y-4"
     >
-      {/* Name */}
-      <div>
-        <label className="mb-2 block font-medium">
-          Name
-        </label>
+      <Input
+        label="Full Name"
+        placeholder="e.g., Jane Doe"
+        error={errors.name?.message}
+        {...register("name")}
+      />
 
-        <input
-          {...register("name")}
-          className="w-full rounded-lg border px-4 py-2"
-        />
+      <Input
+        label="Email Address"
+        type="email"
+        placeholder="jane.doe@company.com"
+        error={errors.email?.message}
+        {...register("email")}
+      />
 
-        <p className="mt-1 text-sm text-red-500">
-          {errors.name?.message}
-        </p>
-      </div>
+      <Input
+        label="Password"
+        type="password"
+        placeholder="Set account password"
+        error={errors.password?.message}
+        {...register("password")}
+      />
 
-      {/* Email */}
-      <div>
-        <label className="mb-2 block font-medium">
-          Email
-        </label>
-
-        <input
-          {...register("email")}
-          className="w-full rounded-lg border px-4 py-2"
-        />
-
-        <p className="mt-1 text-sm text-red-500">
-          {errors.email?.message}
-        </p>
-      </div>
-
-      {/* Password */}
-      <div>
-        <label className="mb-2 block font-medium">
-          Password
-        </label>
-
-        <input
-          type="password"
-          {...register("password")}
-          className="w-full rounded-lg border px-4 py-2"
-        />
-
-        <p className="mt-1 text-sm text-red-500">
-          {errors.password?.message}
-        </p>
-      </div>
-
-      {/* Role */}
-      <div>
-        <label className="mb-2 block font-medium">
+      <div className="space-y-1.5">
+        <label className="block text-xs font-semibold text-brand-700">
           Role
         </label>
-
         <select
           {...register("role")}
-          className="w-full rounded-lg border px-4 py-2"
+          className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-brand-900 shadow-soft transition-all focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-900/20"
         >
-          <option value={ROLES.EMPLOYEE}>
-            Employee
-          </option>
-
-          <option value={ROLES.MANAGER}>
-            Manager
-          </option>
+          <option value={ROLES.EMPLOYEE}>Employee</option>
+          <option value={ROLES.MANAGER}>Manager</option>
         </select>
       </div>
 
-      {/* Department */}
-      <div>
-        <label className="mb-2 block font-medium">
-          Department
-        </label>
-
-        <input
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <Input
+          label="Department"
+          placeholder="e.g., Engineering"
+          error={errors.department?.message}
           {...register("department")}
-          className="w-full rounded-lg border px-4 py-2"
         />
 
-        <p className="mt-1 text-sm text-red-500">
-          {errors.department?.message}
-        </p>
-      </div>
-
-      {/* Designation */}
-      <div>
-        <label className="mb-2 block font-medium">
-          Designation
-        </label>
-
-        <input
+        <Input
+          label="Designation"
+          placeholder="e.g., Software Engineer"
+          error={errors.designation?.message}
           {...register("designation")}
-          className="w-full rounded-lg border px-4 py-2"
         />
-
-        <p className="mt-1 text-sm text-red-500">
-          {errors.designation?.message}
-        </p>
       </div>
 
-      {/* Manager Dropdown (Only for Employees) */}
       {selectedRole === ROLES.EMPLOYEE && (
-        <div>
-          <label className="mb-2 block font-medium">
-            Manager
+        <div className="space-y-1.5">
+          <label className="block text-xs font-semibold text-brand-700">
+            Assigned Manager
           </label>
-
           <select
             {...register("managerId")}
-            className="w-full rounded-lg border px-4 py-2"
+            className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-brand-900 shadow-soft transition-all focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-900/20"
           >
-            <option value="">
-              Select Manager
-            </option>
-
+            <option value="">Select approving manager</option>
             {managers?.map((manager) => (
-              <option
-                key={manager.id}
-                value={manager.id}
-              >
+              <option key={manager.id} value={manager.id}>
                 {manager.name}
               </option>
             ))}
           </select>
-
-          <p className="mt-1 text-sm text-red-500">
-            {errors.managerId?.message}
-          </p>
+          {errors.managerId?.message && (
+            <p className="text-xs font-medium text-red-600">
+              {errors.managerId.message}
+            </p>
+          )}
         </div>
       )}
 
-      {/* Submit Button */}
-      <button
-        type="submit"
-        className="w-full rounded-lg bg-blue-600 py-3 font-medium text-white transition hover:bg-blue-700"
-      >
-        Create User
-      </button>
+      <div className="pt-2">
+        <Button
+          type="submit"
+          variant="primary"
+          loading={isSubmitting}
+          className="w-full justify-center"
+        >
+          Create User Account
+        </Button>
+      </div>
     </form>
   );
 }

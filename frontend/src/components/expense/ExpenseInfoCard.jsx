@@ -1,17 +1,15 @@
+import Card from "../ui/Card";
+
 function ExpenseInfoCard({
   expense,
 }) {
   return (
-    <div className="rounded-2xl border bg-white p-6 shadow-sm">
-
-      <h2 className="mb-6 text-xl font-semibold">
-
+    <Card className="p-6">
+      <h2 className="mb-6 text-base font-semibold text-brand-900">
         Expense Information
-
       </h2>
 
-      <div className="grid grid-cols-2 gap-6">
-
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         <Info
           label="Title"
           value={expense.title}
@@ -19,9 +17,7 @@ function ExpenseInfoCard({
 
         <Info
           label="Category"
-          value={
-            expense.category.name
-          }
+          value={expense.category.name}
         />
 
         <Info
@@ -35,13 +31,11 @@ function ExpenseInfoCard({
           label="Description"
           value={
             expense.description ||
-            "-"
+            "No description provided."
           }
         />
-
       </div>
-
-    </div>
+    </Card>
   );
 }
 
@@ -51,15 +45,13 @@ function Info({
 }) {
   return (
     <div>
-
-      <p className="text-sm text-slate-500">
+      <p className="text-xs font-medium text-brand-500">
         {label}
       </p>
 
-      <p className="mt-2 font-medium">
+      <p className="mt-1 text-sm font-medium text-brand-900">
         {value}
       </p>
-
     </div>
   );
 }

@@ -12,18 +12,14 @@ import FinancialSummaryCard from "../../components/expense/FinancialSummaryCard"
 import ReceiptSection from "../../components/expense/ReceiptSection";
 import ActionSection from "../../components/expense/ActionSection";
 import ExpenseForm from "../../components/forms/ExpenseForm";
+import Card from "../../components/ui/Card";
 
 function ExpenseDetailsPage() {
   const { id } = useParams();
 
-  const [expense, setExpense] =
-    useState(null);
-
-  const [loading, setLoading] =
-    useState(true);
-
-  const [editing, setEditing] =
-    useState(false);
+  const [expense, setExpense] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState(false);
 
   useEffect(() => {
     loadExpense();
@@ -31,9 +27,7 @@ function ExpenseDetailsPage() {
 
   async function loadExpense() {
     try {
-      const data =
-        await getExpenseById(id);
-
+      const data = await getExpenseById(id);
       setExpense(data);
     } catch (error) {
       console.error(error);
@@ -42,18 +36,13 @@ function ExpenseDetailsPage() {
     }
   }
 
-  async function handleUpdate(
-    expenseData
-  ) {
+  async function handleUpdate(expenseData) {
     try {
-      const updated =
-        await updateExpense(
-          expense.id,
-          expenseData
-        );
-
+      const updated = await updateExpense(
+        expense.id,
+        expenseData
+      );
       setExpense(updated);
-
       setEditing(false);
     } catch (error) {
       console.error(error);
@@ -62,71 +51,62 @@ function ExpenseDetailsPage() {
 
   if (loading) {
     return (
-      <div className="py-20 text-center">
-        Loading expense...
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="text-center">
+          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-border border-t-brand-900" />
+          <p className="mt-4 text-sm font-medium text-brand-500">
+            Loading expense details...
+          </p>
+        </div>
       </div>
     );
   }
 
   if (!expense) {
     return (
-      <div className="py-20 text-center">
-        Expense not found.
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="text-center">
+          <p className="text-base font-semibold text-brand-900">
+            Expense not found
+          </p>
+          <p className="mt-1 text-sm text-brand-500">
+            The requested expense claim could not be located.
+          </p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-6xl space-y-8">
-
-      <ExpenseHeader
-        expense={expense}
-      />
+    <div className="mx-auto max-w-5xl space-y-6">
+      <ExpenseHeader expense={expense} />
 
       {editing ? (
-        <div className="rounded-2xl border bg-white p-8 shadow-sm">
-
+        <Card className="p-6 sm:p-8">
           <ExpenseForm
             defaultValues={{
               title: expense.title,
-              categoryId:
-                expense.category.id,
-              amount: Number(
-                expense.amount
-              ),
-              tax: Number(
-                expense.tax
-              ),
-              expenseDate:
-                expense.expenseDate.split(
-                  "T"
-                )[0],
-              description:
-                expense.description,
+              categoryId: expense.category.id,
+              amount: Number(expense.amount),
+              tax: Number(expense.tax),
+              expenseDate: expense.expenseDate.split("T")[0],
+              description: expense.description,
             }}
-            onSubmit={
-              handleUpdate
-            }
+            onSubmit={handleUpdate}
           />
-
-        </div>
+        </Card>
       ) : (
-        <ExpenseInfoCard
-          expense={expense}
-        />
+        <ExpenseInfoCard expense={expense} />
       )}
 
-      <FinancialSummaryCard
-        expense={expense}
-      />
+      <FinancialSummaryCard expense={expense} />
 
       {expense.managerComment && (
-        <div className="rounded-2xl border border-red-200 bg-red-50 p-6 shadow-sm">
-          <h2 className="mb-2 text-lg font-semibold text-red-700">
-            Manager Feedback
-          </h2>
-
-          <p className="text-slate-700">
+        <div className="rounded-xl border border-red-200 bg-red-50/60 p-6 shadow-soft">
+          <h3 className="text-sm font-semibold text-red-900">
+            Manager Feedback / Rejection Reason
+          </h3>
+          <p className="mt-1.5 text-sm leading-relaxed text-red-700">
             {expense.managerComment}
           </p>
         </div>
@@ -142,7 +122,6 @@ function ExpenseDetailsPage() {
         editing={editing}
         setEditing={setEditing}
       />
-
     </div>
   );
 }

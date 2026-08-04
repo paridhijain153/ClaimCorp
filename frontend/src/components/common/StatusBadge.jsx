@@ -1,26 +1,25 @@
 const styles = {
   DRAFT:
-    "border border-gray-200 bg-gray-50 text-gray-700",
+    "border-brand-200 bg-brand-50 text-brand-700",
 
   SUBMITTED:
-    "border border-amber-200 bg-amber-50 text-amber-700",
+    "border-amber-200 bg-amber-50 text-amber-800",
 
   APPROVED:
-    "border border-green-200 bg-green-50 text-green-700",
+    "border-emerald-200 bg-emerald-50 text-emerald-800",
 
   REJECTED:
-    "border border-red-200 bg-red-50 text-red-700",
+    "border-red-200 bg-red-50 text-red-800",
 
   REIMBURSED:
-    "border border-blue-200 bg-blue-50 text-blue-700",
+    "border-blue-200 bg-blue-50 text-blue-800",
 };
 
 function StatusBadge({ status }) {
   return (
     <span
-      className={`inline-flex items-center justify-center rounded-md px-2.5 py-1 text-xs font-medium ${
-        styles[status] ??
-        "border border-gray-200 bg-gray-50 text-gray-700"
+      className={`inline-flex items-center justify-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider ${
+        styles[status] ?? "border-brand-200 bg-brand-50 text-brand-700"
       }`}
     >
       {status}

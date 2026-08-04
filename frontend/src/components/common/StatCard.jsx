@@ -9,31 +9,31 @@ function StatCard({
   className = "",
 }) {
   return (
-    <Card className={`h-full flex flex-col justify-between ${className}`}>
+    <Card className={`h-full flex flex-col justify-between p-5 sm:p-6 ${className}`}>
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-medium text-slate-500">
+          <p className="text-sm font-medium text-brand-500">
             {title}
           </p>
 
-          <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em] text-slate-900">
+          <h2 className="mt-2 text-2xl font-bold tracking-tight text-brand-900 sm:text-3xl tabular-nums">
             {value}
           </h2>
         </div>
 
         {Icon && (
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-slate-100 text-slate-700">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border bg-surface text-brand-700 shadow-soft">
             <Icon
               size={18}
-              className={color || "text-slate-600"}
-              strokeWidth={2.2}
+              className={color || "text-brand-700"}
+              strokeWidth={2}
             />
           </div>
         )}
       </div>
 
       {subtitle && (
-        <p className="mt-4 text-xs font-medium text-slate-500">
+        <p className="mt-4 text-xs font-medium text-brand-400">
           {subtitle}
         </p>
       )}

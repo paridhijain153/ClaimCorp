@@ -1,7 +1,10 @@
 import { Eye } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
+import DataTable from "./DataTable";
+import TableEmpty from "./TableEmpty";
 import StatusBadge from "../common/StatusBadge";
+import Button from "../ui/Button";
 
 function ExpensesTable({
   expenses,
@@ -9,74 +12,84 @@ function ExpensesTable({
   const navigate = useNavigate();
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-      <div className="w-full overflow-x-auto">
-        <table className="min-w-full border-separate border-spacing-0 text-sm">
-          <thead>
-            <tr className="bg-slate-50">
-              <th className="border-b border-slate-200 px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
-                Title
-              </th>
+    <DataTable
+      title="My Expenses"
+      description="Track and review all your submitted expense claims."
+    >
+      <table className="min-w-full border-separate border-spacing-0 text-sm">
+        <thead>
+          <tr>
+            <th className="border-b border-border px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-brand-500">
+              Title
+            </th>
 
-              <th className="border-b border-slate-200 px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
-                Category
-              </th>
+            <th className="border-b border-border px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-brand-500">
+              Category
+            </th>
 
-              <th className="border-b border-slate-200 px-6 py-4 text-right text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
-                Amount
-              </th>
+            <th className="border-b border-border px-6 py-4 text-right text-xs font-semibold uppercase tracking-wider text-brand-500">
+              Amount
+            </th>
 
-              <th className="border-b border-slate-200 px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
-                Status
-              </th>
+            <th className="border-b border-border px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-brand-500">
+              Status
+            </th>
 
-              <th className="border-b border-slate-200 px-6 py-4 text-right text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
-                Action
-              </th>
-            </tr>
-          </thead>
+            <th className="border-b border-border px-6 py-4 text-right text-xs font-semibold uppercase tracking-wider text-brand-500">
+              Action
+            </th>
+          </tr>
+        </thead>
 
-          <tbody>
-            {expenses.map((expense) => (
+        <tbody>
+          {!expenses || expenses.length === 0 ? (
+            <TableEmpty
+              title="No expenses found"
+              description="You haven't created any expense claims yet."
+            />
+          ) : (
+            expenses.map((expense) => (
               <tr
                 key={expense.id}
-                className="transition-colors duration-200 hover:bg-slate-50"
+                className="transition-colors duration-200 hover:bg-brand-50"
               >
-                <td className="border-b border-slate-100 px-6 py-5 font-semibold text-slate-900">
+                <td className="border-b border-border px-6 py-4 font-semibold text-brand-900">
                   <div className="max-w-xs truncate">
                     {expense.title}
                   </div>
                 </td>
 
-                <td className="whitespace-nowrap border-b border-slate-100 px-6 py-5 text-slate-600">
+                <td className="whitespace-nowrap border-b border-border px-6 py-4 text-brand-600">
                   {expense.category?.name}
                 </td>
 
-                <td className="whitespace-nowrap border-b border-slate-100 px-6 py-5 text-right font-semibold tabular-nums text-slate-900">
+                <td className="whitespace-nowrap border-b border-border px-6 py-4 text-right font-semibold tabular-nums text-brand-900">
                   ₹{expense.amount}
                 </td>
 
-                <td className="whitespace-nowrap border-b border-slate-100 px-6 py-5">
+                <td className="whitespace-nowrap border-b border-border px-6 py-4">
                   <StatusBadge status={expense.status} />
                 </td>
 
-                <td className="whitespace-nowrap border-b border-slate-100 px-6 py-5 text-right">
-                  <button
+                <td className="whitespace-nowrap border-b border-border px-6 py-4 text-right">
+                  <Button
+                    variant="ghost"
                     onClick={() =>
                       navigate(`/employee/expenses/${expense.id}`)
                     }
-                    aria-label="View expense"
-                    className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                    aria-label="View expense details"
+                    className="!py-1.5 !px-3"
                   >
-                    <Eye size={16} />
-                  </button>
+                    <Eye size={16} className="mr-1.5 text-brand-500" />
+                    View
+                  </Button>
                 </td>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+            ))
+          )}
+        </tbody>
+      </table>
+    </DataTable>
   );
 }
 

@@ -37,8 +37,8 @@ function ManagerDashboard() {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
         <div className="text-center">
-          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-slate-900" />
-          <p className="mt-4 text-sm font-medium text-slate-500">
+          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-border border-t-brand-900" />
+          <p className="mt-4 text-sm font-medium text-brand-500">
             Loading dashboard...
           </p>
         </div>
@@ -47,55 +47,45 @@ function ManagerDashboard() {
   }
 
   return (
-    <div className="space-y-8">
-      <header className="rounded-2xl border border-slate-200 bg-slate-50/80 p-6 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
-        <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-            Operations
-          </p>
-          <h1 className="mt-2 text-2xl font-semibold tracking-tight text-slate-900">
-            Manager Dashboard
-          </h1>
-          <p className="mt-2 text-sm text-slate-500">
-            Review employee expenses and monitor approvals.
-          </p>
-        </div>
-      </header>
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-lg font-semibold tracking-tight text-brand-900">
+          Approval Metrics
+        </h2>
+        <p className="mt-1 text-sm text-brand-500">
+          Review employee expenses and monitor operational approvals.
+        </p>
+      </div>
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 lg:gap-5">
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 lg:gap-6">
         <StatCard
           title="Pending Approvals"
+          subtitle="Awaiting review"
           value={stats.pendingExpenses}
-          color="text-amber-600"
-          className="border-slate-200 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)]"
         />
 
         <StatCard
-          title="Approved"
+          title="Approved Expenses"
+          subtitle="Successfully cleared"
           value={stats.approvedExpenses}
-          color="text-emerald-600"
-          className="border-slate-200 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)]"
         />
 
         <StatCard
-          title="Rejected"
+          title="Rejected Expenses"
+          subtitle="Returned to staff"
           value={stats.rejectedExpenses}
-          color="text-rose-600"
-          className="border-slate-200 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)]"
         />
 
         <StatCard
           title="Pending Amount"
-          value={`₹${stats.pendingAmount}`}
-          color="text-blue-600"
-          className="border-slate-200 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)]"
+          subtitle="Total pending value"
+          value={`₹${Number(stats.pendingAmount || 0).toLocaleString()}`}
         />
 
         <StatCard
           title="Approved Amount"
-          value={`₹${stats.approvedAmount}`}
-          color="text-emerald-600"
-          className="border-slate-200 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)]"
+          subtitle="Total cleared value"
+          value={`₹${Number(stats.approvedAmount || 0).toLocaleString()}`}
         />
       </div>
     </div>

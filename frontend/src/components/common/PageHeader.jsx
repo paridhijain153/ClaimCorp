@@ -4,14 +4,14 @@ function PageHeader({
   action,
 }) {
   return (
-    <div className="mb-8 flex flex-col gap-6 border-b border-slate-200 pb-6 lg:flex-row lg:items-end lg:justify-between">
+    <div className="mb-6 flex flex-col gap-4 border-b border-border pb-5 sm:flex-row sm:items-center sm:justify-between">
       <div className="min-w-0 flex-1">
-        <h1 className="text-3xl font-bold tracking-tight leading-tight text-slate-900 sm:text-4xl">
+        <h1 className="text-xl font-bold tracking-tight text-brand-900 sm:text-2xl">
           {title}
         </h1>
 
         {description && (
-          <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-500 sm:text-base">
+          <p className="mt-1 text-sm text-brand-500">
             {description}
           </p>
         )}
