@@ -298,7 +298,7 @@ Additional documentation is available inside:
 **Paridhi Jain**
 
 - GitHub: https://github.com/paridhijain153
-- LinkedIn: *(Add your LinkedIn URL)*
+- LinkedIn: *https://www.linkedin.com/in/paridhi-jain-b41b75378*
 
 ---
 
