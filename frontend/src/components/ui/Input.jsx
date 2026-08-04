@@ -5,36 +5,42 @@ function Input({
   ...props
 }) {
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-1.5">
       {label && (
-        <label className="text-sm font-medium text-gray-700">
+        <label className="text-sm font-medium text-gray-900">
           {label}
         </label>
       )}
 
       <input
         className={`
-          h-11
+          block
           w-full
           rounded-lg
           border
-          border-gray-300
+          border-gray-200
           bg-white
-          px-4
+          px-3
+          py-2
           text-sm
-          outline-none
-          transition
+          text-gray-900
+          placeholder:text-gray-400
+          transition-colors
           focus:border-blue-500
-          focus:ring-2
-          focus:ring-blue-200
-          ${error ? "border-red-500" : ""}
+          focus:outline-none
+          focus:ring-1
+          focus:ring-blue-500
+          disabled:cursor-not-allowed
+          disabled:bg-gray-50
+          disabled:text-gray-500
+          ${error ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}
           ${className}
         `}
         {...props}
       />
 
       {error && (
-        <p className="text-sm text-red-600">
+        <p className="text-xs text-red-600">
           {error}
         </p>
       )}

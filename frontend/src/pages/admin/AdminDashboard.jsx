@@ -8,10 +8,10 @@ import {
   Clock3,
   CheckCircle2,
   XCircle,
-  ShieldAlert,
 } from "lucide-react";
 
-import StatCard from "../../components/cards/StatCard";
+import Card from "../../components/ui/Card";
+import StatCard from "../../components/common/StatCard";
 
 import {
   getDashboard,
@@ -42,108 +42,130 @@ function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="py-20 text-center">
-        Loading dashboard...
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="text-center">
+          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-blue-600" />
+          <p className="mt-4 text-sm font-medium text-gray-500">
+            Loading dashboard...
+          </p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
+      {/* User Overview */}
+      <section className="space-y-4">
+        <div>
+          <h2 className="text-lg font-medium tracking-tight text-gray-900">
+            User Overview
+          </h2>
+          <p className="mt-1 text-sm text-gray-500">
+            Overview of registered users and organizational roles.
+          </p>
+        </div>
 
-      {/* Heading */}
-      <div>
-        <h1 className="text-3xl font-bold text-slate-900">
-          Admin Dashboard
-        </h1>
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4 sm:gap-6">
+          <StatCard
+            title="Total Users"
+            subtitle="All registered users"
+            value={dashboard.totalUsers}
+            icon={Users}
+            color="text-blue-600"
+          />
 
-        <p className="mt-2 text-slate-500">
-          Overview of the expense management system.
-        </p>
-      </div>
+          <StatCard
+            title="Managers"
+            subtitle="Organization managers"
+            value={dashboard.totalManagers}
+            icon={UserCog}
+            color="text-violet-600"
+          />
 
-      {/* Users */}
-      <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+          <StatCard
+            title="Employees"
+            subtitle="Registered employees"
+            value={dashboard.totalEmployees}
+            icon={UserCheck}
+            color="text-green-600"
+          />
 
-        <StatCard
-          title="Total Users"
-          value={dashboard.totalUsers}
-          icon={Users}
-          color="blue"
-        />
+          <StatCard
+            title="Categories"
+            subtitle="Expense categories"
+            value={dashboard.totalCategories}
+            icon={FolderOpen}
+            color="text-orange-600"
+          />
+        </div>
+      </section>
 
-        <StatCard
-          title="Managers"
-          value={dashboard.totalManagers}
-          icon={UserCog}
-          color="purple"
-        />
+      {/* Expense Overview */}
+      <section className="space-y-4">
+        <div>
+          <h2 className="text-lg font-medium tracking-tight text-gray-900">
+            Expense Overview
+          </h2>
+          <p className="mt-1 text-sm text-gray-500">
+            Current status of expense approvals across the organization.
+          </p>
+        </div>
 
-        <StatCard
-          title="Employees"
-          value={dashboard.totalEmployees}
-          icon={UserCheck}
-          color="green"
-        />
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 sm:gap-6">
+          <StatCard
+            title="Pending Approvals"
+            subtitle="Awaiting manager review"
+            value={dashboard.pendingExpenses}
+            icon={Clock3}
+            color="text-orange-600"
+          />
 
-        <StatCard
-          title="Categories"
-          value={dashboard.totalCategories}
-          icon={FolderOpen}
-          color="orange"
-        />
+          <StatCard
+            title="Approved Expenses"
+            subtitle="Successfully approved"
+            value={dashboard.approvedExpenses}
+            icon={CheckCircle2}
+            color="text-green-600"
+          />
 
-      </div>
+          <StatCard
+            title="Rejected Expenses"
+            subtitle="Returned to employees"
+            value={dashboard.rejectedExpenses}
+            icon={XCircle}
+            color="text-red-600"
+          />
+        </div>
+      </section>
 
-      {/* Expenses */}
-      <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+      {/* Financial Summary */}
+      <section className="space-y-4">
+        <div>
+          <h2 className="text-lg font-medium tracking-tight text-gray-900">
+            Financial Summary
+          </h2>
+          <p className="mt-1 text-sm text-gray-500">
+            Total approved reimbursement amount across the organization.
+          </p>
+        </div>
 
-        <StatCard
-          title="Pending"
-          value={dashboard.pendingExpenses}
-          icon={Clock3}
-          color="orange"
-        />
+        <Card>
+          <div className="flex flex-col justify-center py-2">
+            <p className="text-sm font-medium text-gray-500">
+              Total Approved Amount
+            </p>
 
-        <StatCard
-          title="Approved"
-          value={dashboard.approvedExpenses}
-          icon={CheckCircle2}
-          color="green"
-        />
+            <h2 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+              ₹{Number(dashboard.totalApprovedAmount).toLocaleString()}
+            </h2>
 
-        <StatCard
-          title="Rejected"
-          value={dashboard.rejectedExpenses}
-          icon={XCircle}
-          color="red"
-        />
-
-        <StatCard
-          title="Fraud Alerts"
-          value={dashboard.fraudAlerts}
-          icon={ShieldAlert}
-          color="purple"
-        />
-
-      </div>
-
-      {/* Approved Amount */}
-      <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-
-        <p className="text-sm text-slate-500">
-          Total Approved Amount
-        </p>
-
-        <h2 className="mt-4 text-5xl font-bold text-green-600">
-          ₹
-          {Number(
-            dashboard.totalApprovedAmount
-          ).toLocaleString()}
-        </h2>
-
-      </div>
-
+            <p className="mt-2 max-w-2xl text-sm text-gray-500">
+              Total reimbursement approved across all employees.
+            </p>
+          </div>
+        </Card>
+      </section>
     </div>
   );
 }

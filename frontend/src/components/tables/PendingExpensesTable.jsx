@@ -1,13 +1,11 @@
 import { Eye } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import StatusBadge from "../common/StatusBadge";
 
-function ExpensesTable({
+function PendingExpensesTable({
   expenses,
 }) {
-  const navigate = useNavigate();
-
   return (
     <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
       <div className="w-full overflow-x-auto">
@@ -15,7 +13,11 @@ function ExpensesTable({
           <thead>
             <tr className="bg-slate-50">
               <th className="border-b border-slate-200 px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
-                Title
+                Expense
+              </th>
+
+              <th className="border-b border-slate-200 px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+                Employee
               </th>
 
               <th className="border-b border-slate-200 px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
@@ -42,18 +44,28 @@ function ExpensesTable({
                 key={expense.id}
                 className="transition-colors duration-200 hover:bg-slate-50"
               >
-                <td className="border-b border-slate-100 px-6 py-5 font-semibold text-slate-900">
-                  <div className="max-w-xs truncate">
-                    {expense.title}
+                <td className="border-b border-slate-100 px-6 py-5">
+                  <div className="max-w-xs">
+                    <p className="truncate font-semibold text-slate-900">
+                      {expense.title}
+                    </p>
+
+                    <p className="mt-1 text-xs font-medium tracking-wide text-slate-500">
+                      {expense.expenseNumber}
+                    </p>
                   </div>
                 </td>
 
                 <td className="whitespace-nowrap border-b border-slate-100 px-6 py-5 text-slate-600">
-                  {expense.category?.name}
+                  {expense.employee.name}
+                </td>
+
+                <td className="whitespace-nowrap border-b border-slate-100 px-6 py-5 text-slate-600">
+                  {expense.category.name}
                 </td>
 
                 <td className="whitespace-nowrap border-b border-slate-100 px-6 py-5 text-right font-semibold tabular-nums text-slate-900">
-                  ₹{expense.amount}
+                  ₹{expense.totalAmount}
                 </td>
 
                 <td className="whitespace-nowrap border-b border-slate-100 px-6 py-5">
@@ -61,15 +73,13 @@ function ExpensesTable({
                 </td>
 
                 <td className="whitespace-nowrap border-b border-slate-100 px-6 py-5 text-right">
-                  <button
-                    onClick={() =>
-                      navigate(`/employee/expenses/${expense.id}`)
-                    }
+                  <Link
+                    to={`/manager/expenses/${expense.id}`}
                     aria-label="View expense"
                     className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                   >
                     <Eye size={16} />
-                  </button>
+                  </Link>
                 </td>
               </tr>
             ))}
@@ -80,4 +90,4 @@ function ExpensesTable({
   );
 }
 
-export default ExpensesTable;
+export default PendingExpensesTable;

@@ -3,114 +3,122 @@ import {
   XCircle,
 } from "lucide-react";
 
+import DataTable from "./DataTable";
+import TableEmpty from "./TableEmpty";
+import StatusBadge from "../common/StatusBadge";
+import Button from "../ui/Button";
+
 function UsersTable({
   users,
   onToggleStatus,
 }) {
   return (
-    <table className="min-w-full">
+    <DataTable
+      title="Users"
+      description="Manage employees and managers."
+    >
+      <div className="w-full overflow-x-auto">
+        <table className="min-w-full border-separate border-spacing-0 text-sm">
+          <thead>
+            <tr className="bg-gray-50/50">
+              <th className="border-b border-gray-200 px-6 py-3.5 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                Name
+              </th>
 
-      <thead className="bg-slate-50">
+              <th className="border-b border-gray-200 px-6 py-3.5 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                Email
+              </th>
 
-        <tr>
+              <th className="border-b border-gray-200 px-6 py-3.5 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                Role
+              </th>
 
-          <th className="px-6 py-4 text-left">
-            Name
-          </th>
+              <th className="border-b border-gray-200 px-6 py-3.5 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                Status
+              </th>
 
-          <th className="px-6 py-4 text-left">
-            Email
-          </th>
+              <th className="border-b border-gray-200 px-6 py-3.5 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
+                Action
+              </th>
+            </tr>
+          </thead>
 
-          <th className="px-6 py-4 text-left">
-            Role
-          </th>
+          <tbody>
+            {users.length === 0 ? (
+              <TableEmpty
+                title="No users found"
+                description="Create your first employee or manager."
+              />
+            ) : (
+              users.map((user) => (
+                <tr
+                  key={user.id}
+                  className="transition-colors duration-200 hover:bg-gray-50"
+                >
+                  <td className="whitespace-nowrap border-b border-gray-100 px-6 py-3.5">
+                    <p className="font-medium text-gray-900">
+                      {user.name}
+                    </p>
+                  </td>
 
-          <th className="px-6 py-4 text-left">
-            Status
-          </th>
+                  <td className="whitespace-nowrap border-b border-gray-100 px-6 py-3.5 text-gray-500">
+                    {user.email}
+                  </td>
 
-          <th className="px-6 py-4 text-right">
-            Action
-          </th>
+                  <td className="whitespace-nowrap border-b border-gray-100 px-6 py-3.5">
+                    <span className="inline-flex items-center rounded-md border border-gray-200 bg-gray-50 px-2.5 py-1 text-xs font-medium text-gray-700">
+                      {user.role}
+                    </span>
+                  </td>
 
-        </tr>
+                  <td className="whitespace-nowrap border-b border-gray-100 px-6 py-3.5">
+                    <StatusBadge
+                      status={
+                        user.isActive
+                          ? "APPROVED"
+                          : "REJECTED"
+                      }
+                    />
+                  </td>
 
-      </thead>
-
-      <tbody>
-
-        {users.map((user) => (
-
-          <tr
-            key={user.id}
-            className="border-t"
-          >
-
-            <td className="px-6 py-4">
-              {user.name}
-            </td>
-
-            <td className="px-6 py-4">
-              {user.email}
-            </td>
-
-            <td className="px-6 py-4">
-              {user.role}
-            </td>
-
-            <td className="px-6 py-4">
-
-              {user.isActive ? (
-
-                <span className="rounded-full bg-green-100 px-3 py-1 text-sm text-green-700">
-                  Active
-                </span>
-
-              ) : (
-
-                <span className="rounded-full bg-red-100 px-3 py-1 text-sm text-red-700">
-                  Inactive
-                </span>
-
-              )}
-
-            </td>
-
-            <td className="px-6 py-4 text-right">
-
-              <button
-                onClick={() =>
-                  onToggleStatus(user)
-                }
-                className="rounded-lg border px-3 py-2 hover:bg-slate-100"
-              >
-
-                {user.isActive ? (
-
-                  <XCircle
-                    size={18}
-                  />
-
-                ) : (
-
-                  <CheckCircle
-                    size={18}
-                  />
-
-                )}
-
-              </button>
-
-            </td>
-
-          </tr>
-
-        ))}
-
-      </tbody>
-
-    </table>
+                  <td className="whitespace-nowrap border-b border-gray-100 px-6 py-3.5 text-right">
+                    <Button
+                      variant={
+                        user.isActive
+                          ? "ghost-danger"
+                          : "ghost"
+                      }
+                      onClick={() =>
+                        onToggleStatus(user)
+                      }
+                      className="!py-1.5 !px-3"
+                    >
+                      {user.isActive ? (
+                        <>
+                          <XCircle
+                            size={16}
+                            className="mr-1.5"
+                          />
+                          Deactivate
+                        </>
+                      ) : (
+                        <>
+                          <CheckCircle
+                            size={16}
+                            className="mr-1.5"
+                          />
+                          Activate
+                        </>
+                      )}
+                    </Button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+    </DataTable>
   );
 }
 
