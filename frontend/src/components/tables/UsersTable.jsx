@@ -1,6 +1,7 @@
 import {
   CheckCircle,
   XCircle,
+  KeyRound,
 } from "lucide-react";
 
 import DataTable from "./DataTable";
@@ -11,6 +12,7 @@ import Button from "../ui/Button";
 function UsersTable({
   users,
   onToggleStatus,
+  onResetPassword,
 }) {
   return (
     <DataTable
@@ -23,15 +25,19 @@ function UsersTable({
             <th className="border-b border-border px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-brand-500">
               Name
             </th>
+
             <th className="border-b border-border px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-brand-500">
               Email
             </th>
+
             <th className="border-b border-border px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-brand-500">
               Role
             </th>
+
             <th className="border-b border-border px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-brand-500">
               Status
             </th>
+
             <th className="border-b border-border px-6 py-4 text-right text-xs font-semibold uppercase tracking-wider text-brand-500">
               Action
             </th>
@@ -48,7 +54,7 @@ function UsersTable({
             users.map((user) => (
               <tr
                 key={user.id}
-                className="transition-colors duration-200 hover:bg-brand-50 group"
+                className="group transition-colors duration-200 hover:bg-brand-50"
               >
                 <td className="whitespace-nowrap border-b border-border px-6 py-4">
                   <p className="font-medium text-brand-900">
@@ -76,36 +82,52 @@ function UsersTable({
                   />
                 </td>
 
-                <td className="whitespace-nowrap border-b border-border px-6 py-4 text-right">
-                  <Button
-                    variant={
-                      user.isActive
-                        ? "ghost-danger"
-                        : "ghost"
-                    }
-                    onClick={() =>
-                      onToggleStatus(user)
-                    }
-                    className="!py-1.5 !px-3"
-                  >
-                    {user.isActive ? (
-                      <>
-                        <XCircle
-                          size={16}
-                          className="mr-1.5"
-                        />
-                        Deactivate
-                      </>
-                    ) : (
-                      <>
-                        <CheckCircle
-                          size={16}
-                          className="mr-1.5"
-                        />
-                        Activate
-                      </>
-                    )}
-                  </Button>
+                <td className="whitespace-nowrap border-b border-border px-6 py-4">
+                  <div className="flex justify-end gap-2">
+                    <Button
+                      variant="ghost"
+                      onClick={() =>
+                        onResetPassword(user)
+                      }
+                      className="!px-3 !py-1.5"
+                    >
+                      <KeyRound
+                        size={16}
+                        className="mr-1.5"
+                      />
+                      Reset
+                    </Button>
+
+                    <Button
+                      variant={
+                        user.isActive
+                          ? "ghost-danger"
+                          : "ghost"
+                      }
+                      onClick={() =>
+                        onToggleStatus(user)
+                      }
+                      className="!px-3 !py-1.5"
+                    >
+                      {user.isActive ? (
+                        <>
+                          <XCircle
+                            size={16}
+                            className="mr-1.5"
+                          />
+                          Deactivate
+                        </>
+                      ) : (
+                        <>
+                          <CheckCircle
+                            size={16}
+                            className="mr-1.5"
+                          />
+                          Activate
+                        </>
+                      )}
+                    </Button>
+                  </div>
                 </td>
               </tr>
             ))
