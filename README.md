@@ -3,7 +3,15 @@
 <p align="center">
   <strong>A modern full-stack enterprise expense management platform built with React, Node.js, Express, Prisma, and PostgreSQL.</strong>
 </p>
+---
+## 🚀 Live Application
 
+🌐 **Frontend:** https://claim-corp.vercel.app
+
+📦 **Backend API:** https://caimcorp-backend.onrender.com
+
+💻 **Repository:** https://github.com/paridhijain153/ClaimCorp
+---
 <p align="center">
 
 ![React](https://img.shields.io/badge/React-19-blue?logo=react)
