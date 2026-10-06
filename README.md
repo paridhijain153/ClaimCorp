@@ -40,6 +40,20 @@ The project follows a clean layered architecture with separate frontend and back
 
 ---
 
+## 🔐 Demo Credentials
+
+Use the following accounts to explore ClaimCorp:
+
+| Role | Email | Password |
+|------|-------|----------|
+| Admin | `admin@claimcorp.com` | `Admin@123` |
+| Manager | `ram.manager@example.com` | `Ram@1234` |
+| Employee | `jane@claimcorp.com` | `Jane@123` |
+
+> These accounts are provided for demonstration and testing purposes.
+
+---
+
 
 # ✨ Features
 
